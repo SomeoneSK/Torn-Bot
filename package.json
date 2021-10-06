@@ -1,0 +1,30 @@
+{
+  "name": "torn-utilities-bot",
+  "version": "1.0.0",
+  "description": "General bot for Torn",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SomeoneSK/torn-utilities-bot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SomeoneSK/torn-utilities-bot/issues"
+  },
+  "homepage": "https://github.com/SomeoneSK/torn-utilities-bot#readme",
+  "dependencies": {
+    "@discordjs/builders": "^0.6.0",
+    "@discordjs/rest": "0.1.0-canary.0",
+    "axios": "^0.22.0",
+    "discord-api-types": "^0.23.1",
+    "discord.js": "^13.1.0",
+    "mongodb": "^4.1.2",
+    "node": "^16.10.0",
+    "node-fetch": "^3.0.0"
+  }
+}
