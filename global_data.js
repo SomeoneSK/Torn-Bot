@@ -9,8 +9,8 @@ var data = {
 }
 
 const { MongoClient } = require('mongodb');
-const password = process.env['db_password']
-const uri = "mongodb+srv://db_user:" + password + "@cluster0.blcml.mongodb.net/database0?retryWrites=true&w=majority";
+const db_string = process.env['db_string']
+const uri = db_string
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 async function make_data(){
