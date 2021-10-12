@@ -1,0 +1,315 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
+const global_data = require('../global_data.js')
+const general = require('../general.js')
+const error = require('./error.js')
+
+const faction_stuff = require('../helper_functions/faction_stuff.js')
+const components = require('../helper_functions/components.js')
+const responses = require('../responses')
+
+async function faction_profile(id, interaction, info = false) {
+	if ( info === false ) {
+		let data = global_data.getData()
+		let url = ""
+		if ( id === null ) {
+			if ( !Object.keys(data["players"]).includes(interaction.user.id.toString()) || data["players"][ interaction.user.id.toString() ]["torn_api_key"] === "") {
+				return await error.error( "Set your api with /setapi or use ID in this command!" )
+			}
+			url = general.make_url( "faction", id="", selections=[""] )
+		} else {
+			url = general.make_url( "faction", id=id, selections=[""] )
+		}
+
+		info = await general.get_data_from_api( url, user_id=interaction.user.id, private=false )
+	}
+
+
+	if ( info["error"] !== undefined ) {
+		return await error.error(info["error"])
+	}
+
+	let fields = []
+
+	let members_info = await faction_stuff.members_info(info)
+	let field1 = '\n**Respect: **' + general.format_number(info["respect"])
+	field1 += '**\nLeader: **' + members_info["leader_name"] + " [" + info["leader"] + "]"
+	field1 += '\n**Co-Leader: **' + members_info["coleader_name"] + " [" + info["co-leader"] + "]"
+	field1 += '\n**Age: **' + general.format_number(info["age"]) + " days"
+	field1 += '\n**Members: **' + members_info["members_count"] + "/" + general.format_number(info["capacity"])
+	field1 += '\n**Best Chain: **' + general.format_number(info["best_chain"])
+	fields.push( { name: 'Info', value: field1, inline: true } )
+
+	
+	let field2 = ''
+	//fields.push( { name: 'Info', value: field2, inline: true } )
+
+	const embed = new MessageEmbed()
+		.setColor('#0099ff')
+		.setTitle(info["name"] + " [" + info["ID"] + "] - " + info["tag"])
+		.setURL( general.make_link("faction_profile", info["ID"]) )
+		//.setAuthor('Some name', 'https://i.imgur.com/AfFp7pu.png', 'https://discord.js.org')
+		//.setDescription(gender + " " + info["rank"] )
+		//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
+		.addFields(fields)
+		//.addField('Inline field title', 'Some value here', true)
+		//.setImage('https://i.imgur.com/AfFp7pu.png')
+		.setTimestamp()
+		.setFooter('Page 1/1', '');
+
+	async function members() {
+		let members = await responses.faction_members(info, interaction)
+		await interaction.editReply( members )
+	}
+
+	let members_button = await components.button(interaction = interaction, button_id = "members", button_label = "Members", button_style="PRIMARY", func = members)
+
+	const row = new MessageActionRow()
+			.addComponents(members_button)
+
+	return { embeds: [embed], components: [row] }
+}
+
+exports.faction_profile = faction_profile;
+
+/*
+{
+	"company": {
+		"ID": 70390,
+		"company_type": 12,
+		"rating": 10,
+		"name": "Aisle 11",
+		"director": 2095323,
+		"employees_hired": 12,
+		"employees_capacity": 12,
+		"daily_income": 374059,
+		"daily_customers": 7100,
+		"weekly_income": 18478735,
+		"weekly_customers": 311886,
+		"days_old": 1500,
+		"employees": {
+			"2068649": {
+				"name": "hamidreza",
+				"position": "Cashier",
+				"days_in_company": 161,
+				"last_action": {
+					"status": "Offline",
+					"timestamp": 1634051633,
+					"relative": "1 hour ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			},
+			"2095323": {
+				"name": "TyCoon",
+				"position": "Director",
+				"days_in_company": 403,
+				"last_action": {
+					"status": "Offline",
+					"timestamp": 1634046388,
+					"relative": "3 hours ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			},
+			"2113306": {
+				"name": "Jasoncrasher",
+				"position": "Cashier",
+				"days_in_company": 505,
+				"last_action": {
+					"status": "Offline",
+					"timestamp": 1634056862,
+					"relative": "13 minutes ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			},
+			"2116701": {
+				"name": "FinnaNut",
+				"position": "Trainer",
+				"days_in_company": 558,
+				"last_action": {
+					"status": "Offline",
+					"timestamp": 1634055058,
+					"relative": "43 minutes ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			},
+			"2183745": {
+				"name": "HighPerformance",
+				"position": "Trainer",
+				"days_in_company": 302,
+				"last_action": {
+					"status": "Idle",
+					"timestamp": 1634043302,
+					"relative": "3 hours ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			},
+			"2226802": {
+				"name": "JadedMarxist",
+				"position": "Trainer",
+				"days_in_company": 589,
+				"last_action": {
+					"status": "Offline",
+					"timestamp": 1634039747,
+					"relative": "4 hours ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			},
+			"2228096": {
+				"name": "Grimulkin",
+				"position": "Trainer",
+				"days_in_company": 585,
+				"last_action": {
+					"status": "Offline",
+					"timestamp": 1634056949,
+					"relative": "11 minutes ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			},
+			"2237109": {
+				"name": "pktom1",
+				"position": "Trainer",
+				"days_in_company": 444,
+				"last_action": {
+					"status": "Offline",
+					"timestamp": 1633943683,
+					"relative": "1 day ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			},
+			"2242714": {
+				"name": "MrMachine",
+				"position": "Trainer",
+				"days_in_company": 245,
+				"last_action": {
+					"status": "Offline",
+					"timestamp": 1634043514,
+					"relative": "3 hours ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			},
+			"2305041": {
+				"name": "Gourry",
+				"position": "Trainer",
+				"days_in_company": 590,
+				"last_action": {
+					"status": "Offline",
+					"timestamp": 1634034931,
+					"relative": "6 hours ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			},
+			"2357707": {
+				"name": "AshlynIly",
+				"position": "Trainer",
+				"days_in_company": 97,
+				"last_action": {
+					"status": "Offline",
+					"timestamp": 1634047748,
+					"relative": "2 hours ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			},
+			"2563432": {
+				"name": "monogamy",
+				"position": "Trainer",
+				"days_in_company": 29,
+				"last_action": {
+					"status": "Idle",
+					"timestamp": 1634056489,
+					"relative": "19 minutes ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			},
+			"2572033": {
+				"name": "SomeoneSK",
+				"position": "Trainer",
+				"days_in_company": 39,
+				"last_action": {
+					"status": "Idle",
+					"timestamp": 1634057485,
+					"relative": "2 minutes ago"
+				},
+				"status": {
+					"description": "Okay",
+					"details": "",
+					"state": "Okay",
+					"color": "green",
+					"until": 0
+				}
+			}
+		}
+	}
+}
+*/

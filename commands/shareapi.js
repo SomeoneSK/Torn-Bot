@@ -3,8 +3,7 @@ const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = req
 const global_data = require('../global_data.js')
 const general = require('../general.js')
 
-const embeds = require('../embeds')
-const id_api_stuff = require('../id_api_stuff.js')
+const id_api_stuff = require('../helper_functions/id_api_stuff.js')
 
 module.exports = {
 	data: new SlashCommandBuilder()

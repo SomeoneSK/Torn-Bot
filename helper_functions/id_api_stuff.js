@@ -1,4 +1,4 @@
-const global_data = require('./global_data.js')
+const global_data = require('../global_data.js')
 
 async function set_users_key(user_id, key="") {
 	let filter = {"discord_id": user_id.toString() }

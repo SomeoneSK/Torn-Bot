@@ -1,6 +1,6 @@
 const axios = require('axios');
 const global_data = require('./global_data.js')
-const id_api_stuff = require('./id_api_stuff.js')
+const id_api_stuff = require('./helper_functions/id_api_stuff.js')
 
 
 function get_user( user_id=false ) {
@@ -31,11 +31,13 @@ function get_users_key(user_id=false) {
 }
 
 async function http_request(url) {
+	console.log(url)
 	try {
 		const response = await axios.get(url);
 		return response.data
 	} catch (error) {
-		console.error(error);
+    	console.log(error.config);
+		return {"error":"Error while making http request!"}
 	}
 }
 
@@ -46,7 +48,6 @@ async function get_data_from_api_shared(url) {
 	let index_used = data["general"]["shared_apis"]["index"]
 	while (true) {
 		let result = await http_request(url + key)
-		console.log("error", result["error"])
 		if ( result["error"] !== undefined ) {
 			if ( ![2, 5, 10, 11, 12, 13, 14].includes(result["error"]["code"]) ) {
 				return result
@@ -59,7 +60,6 @@ async function get_data_from_api_shared(url) {
 			if ( [2, 10].includes(result["error"]["code"]) ) {
 				await id_api_stuff.share_users_key(data["general"]["shared_apis"]["apis"][index_used]["discord_id"], share=false)
 			}
-			console.log(index)
 			if(index === start_index) {
 				return {"error":"All shared APIs failed!"}
 			}
@@ -144,8 +144,38 @@ function format_number(number) {
 	return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function make_random_str(length) {
+    var result           = '';
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result += characters.charAt(Math.floor(Math.random() * 
+ charactersLength));
+   }
+   return result;
+}
+
+function copy(object) {
+	return Object.assign({}, object )
+}
+
+let emojis = {} 
+async function set_emojis(new_emojis){
+	emojis = new_emojis
+}
+
+function get_emoji(name){
+	return emojis[name]
+}
+
+
+
 exports.get_data_from_api = get_data_from_api;
 exports.make_url = make_url;
 exports.make_link = make_link;
 exports.format_number = format_number;
 exports.get_users_key = get_users_key;
+exports.make_random_str = make_random_str;
+exports.copy = copy;
+exports.set_emojis = set_emojis;
+exports.get_emoji = get_emoji;

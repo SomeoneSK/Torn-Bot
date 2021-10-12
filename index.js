@@ -6,7 +6,7 @@ const { clientId, guildId } = require('./config.json');
 const token = process.env['token']
 
 const data = require('./global_data.js')
-const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] })
 
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 

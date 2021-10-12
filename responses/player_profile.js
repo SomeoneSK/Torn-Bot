@@ -4,21 +4,26 @@ const global_data = require('../global_data.js')
 const general = require('../general.js')
 const error = require('./error.js')
 
-async function player_profile(id, interaction_from) {
-	let data = global_data.getData()
-	if ( id === null ) {
-		if ( !Object.keys(data["players"]).includes(interaction_from.id.toString()) ) {
-			return await error.error( "Set your ID with /setid or use ID in this command!" )
+const components = require('../helper_functions/components.js')
+const embeds = require('../helper_functions/embeds.js')
+
+async function player_profile(id, interaction, info=false) {
+	if ( info === false ) {
+		let data = global_data.getData()
+		if ( id === null ) {
+			if ( !Object.keys(data["players"]).includes(interaction.user.id.toString()) ) {
+				return await error.error( "Set your ID with /setid or use ID in this command!" )
+			}
+			id = data["players"][ interaction.user.id.toString() ]["torn_id"]
 		}
-		id = data["players"][ interaction_from.id.toString() ]["torn_id"]
+		let url = general.make_url( "user", id=id, selections=["profile"] )
+		info = await general.get_data_from_api( url, user_id=interaction.user.id, private=false )
 	}
-	let url = general.make_url( "user", id=id, selections=["profile"] )
-	let info = await general.get_data_from_api( url, user_id=interaction_from.id, private=false )
 	
 	if ( info["error"] !== undefined ) {
 		return await error.error(info["error"])
 	}
-	
+
 	let gender = ":male_sign:"
 	if ( info["gender"] == "Female" ) {
 		gender = ":female_sign:"
@@ -59,6 +64,7 @@ async function player_profile(id, interaction_from) {
 		job = '\n' + info["job"]["position"] + ' at ' + '[' + info["job"]["company_name"] + ' [' + info["job"]["company_id"] + ']](' + general.make_link("company_profile", id=info["job"]["company_id"]) + ')'
 	}
 	field2 += job
+
 	fields.push( { name: 'Info', value: field2, inline: true } )
 	
 	let links = general.make_link("attack", info["player_id"], formnat="Attack") + ', ' + general.make_link("message", info["player_id"], formnat="Message") + ', ' + general.make_link("send_money", info["player_id"], formnat="Send Money") + ', ' + general.make_link("trade", info["player_id"], formnat="Trade") + ', ' + general.make_link("player_bazaar", info["player_id"], formnat="Bazaar") + ', ' + general.make_link("place_bounty", info["player_id"], formnat="Bounty") + ', ' + general.make_link("add_friend", info["player_id"], formnat="Add Friend") + ', ' + general.make_link("add_enemy", info["player_id"], formnat="Add Enemy") + ', ' + general.make_link("display_case", info["player_id"], formnat="Display") + ', ' + general.make_link("personal_stats", info["player_id"], formnat="Stats")
@@ -75,7 +81,7 @@ async function player_profile(id, interaction_from) {
 		//.addField('Inline field title', 'Some value here', true)
 		//.setImage('https://i.imgur.com/AfFp7pu.png')
 		.setTimestamp()
-		.setFooter('Hi', '');
+		.setFooter('Page 1/1', '');
 
 	const row1 = new MessageActionRow()
 		.addComponents(
@@ -85,7 +91,9 @@ async function player_profile(id, interaction_from) {
 				.setStyle('LINK')
 		)
 
-	return { embeds: [embed], components: [] }
+	let limited = await embeds.limit_embed({ embeds: [embed], components: [] }, interaction)
+
+	return limited
 }
 
 exports.player_profile = player_profile;

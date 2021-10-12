@@ -7,16 +7,16 @@ const responses = require('../responses')
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('profile')
-		.setDescription('Shows profile of some player')
+		.setName('faction')
+		.setDescription('Shows profile of some faction')
 		.addStringOption(option =>
-		option.setName('player_id')
-			.setDescription('The player ID')
+		option.setName('faction_id')
+			.setDescription('The faction ID')
 			.setRequired(false)),
 
 	async execute(interaction) {
-		let id = interaction.options.getString('player_id');
+		let id = interaction.options.getString('faction_id');
 
-		return await interaction.reply( await responses.player_profile(id, interaction) )
+		return await interaction.reply( await responses.faction_profile(id, interaction = interaction) )
 	},
 };

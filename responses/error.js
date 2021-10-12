@@ -17,7 +17,7 @@ async function error(error) {
 		.setDescription( "" + error )
 		//.addFields(fields)
 		.setTimestamp()
-		.setFooter('Hi', '');
+		.setFooter('Page 1/1', '');
 
 	return { embeds: [embed], components: [] }
 }
