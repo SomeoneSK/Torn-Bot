@@ -13,7 +13,7 @@ The sum of all characters from all embed structures in a message must not exceed
 Ten embeds can be sent per message
 */
 
-async function limit_embed(returning, interaction) {
+async function limit_embed(returning, interaction, fields_limit = 25) {
 	let embed = general.copy(returning.embeds[0] )
 
 	for (let field of embed.fields) {
@@ -59,7 +59,7 @@ async function limit_embed(returning, interaction) {
 
 	for (let field of embed.fields) {
 		let this_field_len = field.value.length + field.name.length
-		if ( the_messages[the_messages.length - 1].length + 1 > 25 ||  sum_of_current_message + this_field_len > 6000) {
+		if ( the_messages[the_messages.length - 1].length + 1 > fields_limit ||  sum_of_current_message + this_field_len > 6000) {
 			the_messages[the_messages.length] = [field]
 			sum_of_current_message = this_field_len
 		} else {
@@ -103,10 +103,10 @@ async function limit_embed(returning, interaction) {
 	}
 
 	if ( buttons.length !== 0 ) {
-		if (returning.componenets !== undefined) {
+		if (returning.components !== undefined) {
 			// multiple rows
-			buttons.concat( returning.components[0] )
-			returning.components[0] = buttons
+			buttons = buttons.concat( returning.components[0].components )
+			returning.components[0].components = buttons
 		} else {
 			const row = new MessageActionRow()
 				.addComponents(buttons[0])

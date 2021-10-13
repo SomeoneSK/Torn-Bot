@@ -7,66 +7,59 @@ const error = require('./error.js')
 const company_stuff = require('../helper_functions/company_stuff.js')
 const components = require('../helper_functions/components.js')
 const responses = require('../responses')
-const torn = require('../torn')
+const embeds = require('../helper_functions/embeds.js')
+const shorten_texts = require('../helper_functions/shorten_texts.js')
 
-async function company_profile(id, interaction, info = false) {
-	if ( info === false ) {
-		let data = global_data.getData()
-		let url = ""
-		if ( id === null ) {
-			if ( !Object.keys(data["players"]).includes(interaction.user.id.toString()) || data["players"][ interaction.user.id.toString() ]["torn_api_key"] === "") {
-				return await error.error( "Set your api with /setapi or use ID in this command!" )
-			}
-			url = general.make_url( "company", id="", selections=[""] )
-		} else {
-			url = general.make_url( "company", id=id, selections=[""] )
-		}
-
-		info = await general.get_data_from_api( url, user_id=interaction.user.id, private=false )
-	}
-
-
-	if ( info["error"] !== undefined ) {
-		return await error.error(info["error"])
-	}
-
+async function company_employees(info, interaction, page = 1) {
 	let fields = []
-
+	
 	if (Object.keys(info).includes("company")) {
 		info = info["company"]
 	}
 
-	let employees_info = await company_stuff.employees_info(info)
-	let field1 = '**' + info["rating"] + "⭐ " + torn.companies[info["company_type"]]["name"] + '**'
-	field1 += '\n**Director: **' +employees_info["director_name"] + " [" + info["director"] + "]"
-	field1 += '\n**Age: **' + general.format_number(info["days_old"]) + " days"
-	field1 += '\n**Employees: **' + info["employees_hired"] + "/" + info["employees_capacity"]
-	field1 += '\n**Daily, Weekly Income: **' + general.format_number(info["daily_income"]) + ", " + general.format_number(info["weekly_income"])
-	field1 += '\n**Daily, Weekly Customers: **' + general.format_number(info["daily_customers"]) + ", " + general.format_number(info["weekly_customers"])
-	fields.push( { name: 'Info', value: field1, inline: true } )
+	let field1 = ''
+	let index = 0
+	for ( let id of Object.keys(info["employees"] )) {
+		if (index % 5 === 0 && index !== 0) {
+			fields.push( { name: 'Employees', value: field1, inline: true } )
+			field1 = ""
+		}
+		index += 1
+		let member = info["employees"][id]
+		field1 += "\n" + general.make_link("player_profile", id=id, format=member["name"] + "[" + id + "]")
+		field1 += "\n" + member["days_in_company"] + ", " + member["position"]
+		field1 += shorten_texts.shorten_texts( "\n" + member["last_action"]["status"] + " " + member["status"]["description"] + ", " + member["last_action"]["relative"] )
+	}
+
+	fields.push( { name: 'Employees', value: field1, inline: true } )
+
+
 
 	const embed = new MessageEmbed()
 		.setColor('#0099ff')
 		.setTitle(info["name"] + " [" + info["ID"] + "]")
 		.setURL( general.make_link("company_profile", info["ID"]) )
+		.setDescription( "Name [ID] Level\nDays in Company, Position\nStatus, Last Action" )
 		.addFields(fields)
 		.setTimestamp()
 		.setFooter('Page 1/1', '');
 
-	async function employees() {
-		let members = await responses.company_employees(info, interaction)
-		await interaction.editReply( members )
+	async function profile() {
+		let profile = await responses.company_profile(id=0, interaction=interaction, info = info)
+		await interaction.editReply( profile )
 	}
 
-	let members_button = await components.button(interaction = interaction, button_id = "members", button_label = "Members", button_style="PRIMARY", func = employees)
+	let profile_button = await components.button(interaction = interaction, button_id = "profile", button_label = "Profile", button_style="PRIMARY", func = profile)
 
 	const row = new MessageActionRow()
-			.addComponents(members_button)
+			.addComponents(profile_button)
 
-	return { embeds: [embed], components: [row] }
+	let limited = await embeds.limit_embed({ embeds: [embed], components: [row] }, interaction)
+
+	return limited
 }
 
-exports.company_profile = company_profile;
+exports.company_employees = company_employees;
 
 /*
 {

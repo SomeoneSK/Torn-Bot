@@ -20,8 +20,6 @@ async function faction_members(info, interaction, page = 1) {
 		field1 += " - " + member["level"]
 		field1 += "\n" + member["days_in_faction"] + ", " + member["position"]
 		field1 += shorten_texts.shorten_texts( "\n" + member["last_action"]["status"] + " " + member["status"]["description"] + ", " + member["last_action"]["relative"] )
-		//hours to helper_functions
-		//emoji
 	}
 
 	fields.push( { name: 'Members', value: field1, inline: true } )
@@ -31,12 +29,8 @@ async function faction_members(info, interaction, page = 1) {
 		.setColor('#0099ff')
 		.setTitle(info["name"] + " [" + info["ID"] + "] - " + info["tag"])
 		.setURL( general.make_link("faction_profile", info["ID"]) )
-		//.setAuthor('Some name', 'https://i.imgur.com/AfFp7pu.png', 'https://discord.js.org')
 		.setDescription( "Name [ID] Level\nDays in Faction, Position\nStatus, Last Action" )
-		//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
 		.addFields(fields)
-		//.addField('Inline field title', 'Some value here', true)
-		//.setImage('https://i.imgur.com/AfFp7pu.png')
 		.setTimestamp()
 		.setFooter('Page 1/1', '');
 

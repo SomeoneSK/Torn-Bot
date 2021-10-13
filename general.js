@@ -125,6 +125,8 @@ function make_link(which, id="", format=false) {
 		link = "https://www.torn.com/bounties.php?p=add&XID=" + id
 	} else if (which === "display_case") {
 		link = "https://www.torn.com/displaycase.php#display/" + id
+	} else if (which === "item_market") {
+		link = "https://www.torn.com/imarket.php#/p=shop&step=shop&type=&searchname=" + id.replace(" ", "+")
 	}
 
 	if (format !== false) {
@@ -140,7 +142,7 @@ function isInt(value) {
 }
 
 function format_number(number) {
-	if ( !isInt(number) ) {return ""}
+	if ( !isInt(number) ) {number = number.toString() }
 	return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
