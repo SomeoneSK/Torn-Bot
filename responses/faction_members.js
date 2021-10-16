@@ -10,7 +10,7 @@ const responses = require('../responses')
 const embeds = require('../helper_functions/embeds.js')
 const shorten_texts = require('../helper_functions/shorten_texts.js')
 
-async function faction_members(info, interaction, page = 1) {
+async function faction_members(interaction, info, page = 1) {
 	let fields = []
 	
 	let field1 = ''
@@ -35,7 +35,7 @@ async function faction_members(info, interaction, page = 1) {
 		.setFooter('Page 1/1', '');
 
 	async function profile() {
-		let profile = await responses.faction_profile(id=0, interaction=interaction, info = info)
+		let profile = await responses.faction_profile( interaction=interaction, id=0, info = info)
 		await interaction.editReply( profile )
 	}
 
@@ -44,9 +44,9 @@ async function faction_members(info, interaction, page = 1) {
 	const row = new MessageActionRow()
 			.addComponents(profile_button)
 
-	let limited = await embeds.limit_embed({ embeds: [embed], components: [row] }, interaction)
+	let the_reply = await embeds.check_reply({ embeds: [embed], components: [row] }, interaction)
 
-	return limited
+	return the_reply
 }
 
 exports.faction_members = faction_members;

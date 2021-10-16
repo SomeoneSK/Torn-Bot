@@ -9,7 +9,7 @@ const responses = require('../responses')
 const torn = require('../torn')
 const embeds = require('../helper_functions/embeds.js')
 
-async function item_bazaar(item_id, interaction, info = false) {
+async function item_bazaar(interaction, item_id, info = false) {
 	if (info === false) {
 		url = general.make_url( "market", id=item_id, selections=["bazaar"] )
 		info = await general.get_data_from_api( url, user_id=interaction.user.id, private=false )
@@ -52,11 +52,11 @@ async function item_bazaar(item_id, interaction, info = false) {
 		.setURL( general.make_link("item_market", item["name"]) )
 
 	async function item_func() {
-		let item_response = await responses.item(item_id, interaction)
+		let item_response = await responses.item(interaction, item_id)
 		await interaction.editReply( item_response )
 	}
 	async function market() {
-		let market_response = await responses.item_market(item_id, interaction)
+		let market_response = await responses.item_market(interaction, item_id)
 		await interaction.editReply( market_response )
 	}
 
@@ -67,9 +67,9 @@ async function item_bazaar(item_id, interaction, info = false) {
 			.addComponents(item_button)
 			.addComponents(market_button)
 
-	let limited = await embeds.limit_embed({ embeds: [embed], components: [row] }, interaction, fields = 6)
+	let to_reply = await embeds.check_reply({ embeds: [embed], components: [row] }, interaction, fields = 6)
 
-	return limited
+	return to_reply
 }
 
 exports.item_bazaar = item_bazaar;

@@ -17,6 +17,6 @@ module.exports = {
 	async execute(interaction) {
 		let id = interaction.options.getString('player_id');
 
-		return await interaction.reply( await responses.player_profile(id, interaction) )
+		return await interaction.reply( await responses.player_profile(interaction, id) )
 	},
 };

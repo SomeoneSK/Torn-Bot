@@ -10,7 +10,7 @@ const responses = require('../responses')
 const embeds = require('../helper_functions/embeds.js')
 const shorten_texts = require('../helper_functions/shorten_texts.js')
 
-async function company_employees(info, interaction, page = 1) {
+async function company_employees(interaction, info, page = 1) {
 	let fields = []
 	
 	if (Object.keys(info).includes("company")) {
@@ -45,7 +45,7 @@ async function company_employees(info, interaction, page = 1) {
 		.setFooter('Page 1/1', '');
 
 	async function profile() {
-		let profile = await responses.company_profile(id=0, interaction=interaction, info = info)
+		let profile = await responses.company_profile(interaction=interaction, id=0, info = info)
 		await interaction.editReply( profile )
 	}
 
@@ -54,9 +54,9 @@ async function company_employees(info, interaction, page = 1) {
 	const row = new MessageActionRow()
 			.addComponents(profile_button)
 
-	let limited = await embeds.limit_embed({ embeds: [embed], components: [row] }, interaction)
+	let the_reply = await embeds.check_reply({ embeds: [embed], components: [row] }, interaction)
 
-	return limited
+	return the_reply
 }
 
 exports.company_employees = company_employees;

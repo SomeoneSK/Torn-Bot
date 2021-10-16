@@ -7,7 +7,7 @@ const error = require('./error.js')
 const components = require('../helper_functions/components.js')
 const embeds = require('../helper_functions/embeds.js')
 
-async function player_profile(id, interaction, info=false) {
+async function player_profile(interaction, id, info=false) {
 	if ( info === false ) {
 		let data = global_data.getData()
 		if ( id === null ) {
@@ -91,9 +91,9 @@ async function player_profile(id, interaction, info=false) {
 				.setStyle('LINK')
 		)
 
-	let limited = await embeds.limit_embed({ embeds: [embed], components: [] }, interaction)
+	let to_reply = await embeds.check_reply({ embeds: [embed], components: [] }, interaction)
 
-	return limited
+	return to_reply
 }
 
 exports.player_profile = player_profile;

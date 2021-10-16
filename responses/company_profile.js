@@ -9,7 +9,7 @@ const components = require('../helper_functions/components.js')
 const responses = require('../responses')
 const torn = require('../torn')
 
-async function company_profile(id, interaction, info = false) {
+async function company_profile(interaction, id, info = false) {
 	if ( info === false ) {
 		let data = global_data.getData()
 		let url = ""
@@ -54,7 +54,7 @@ async function company_profile(id, interaction, info = false) {
 		.setFooter('Page 1/1', '');
 
 	async function employees() {
-		let members = await responses.company_employees(info, interaction)
+		let members = await responses.company_employees(interaction, info)
 		await interaction.editReply( members )
 	}
 

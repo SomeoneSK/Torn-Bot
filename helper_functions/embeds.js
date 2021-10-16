@@ -13,6 +13,16 @@ The sum of all characters from all embed structures in a message must not exceed
 Ten embeds can be sent per message
 */
 
+async function limit_buttons(the_reply, interaction) {
+	return the_reply
+}
+
+async function check_reply(the_reply, interaction, fields_limit = 25) {
+	the_reply = await limit_embed(the_reply, interaction, fields_limit)
+	the_reply = await limit_buttons(the_reply, interaction)
+	return the_reply
+}
+
 async function limit_embed(returning, interaction, fields_limit = 25) {
 	let embed = general.copy(returning.embeds[0] )
 
@@ -121,3 +131,4 @@ async function limit_embed(returning, interaction, fields_limit = 25) {
 }
 
 exports.limit_embed = limit_embed;
+exports.check_reply = check_reply;

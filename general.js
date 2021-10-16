@@ -170,8 +170,12 @@ function get_emoji(name){
 	return emojis[name]
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 
+exports.http_request = http_request;
 exports.get_data_from_api = get_data_from_api;
 exports.make_url = make_url;
 exports.make_link = make_link;
@@ -181,3 +185,4 @@ exports.make_random_str = make_random_str;
 exports.copy = copy;
 exports.set_emojis = set_emojis;
 exports.get_emoji = get_emoji;
+exports.sleep = sleep;

@@ -8,7 +8,7 @@ const faction_stuff = require('../helper_functions/faction_stuff.js')
 const components = require('../helper_functions/components.js')
 const responses = require('../responses')
 
-async function faction_profile(id, interaction, info = false) {
+async function faction_profile(interaction, id, info = false) {
 	if ( info === false ) {
 		let data = global_data.getData()
 		let url = ""
@@ -58,7 +58,7 @@ async function faction_profile(id, interaction, info = false) {
 		.setFooter('Page 1/1', '');
 
 	async function members() {
-		let members = await responses.faction_members(info, interaction)
+		let members = await responses.faction_members(interaction, info)
 		await interaction.editReply( members )
 	}
 

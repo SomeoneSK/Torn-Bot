@@ -15,6 +15,11 @@ module.exports = {
 			emojis[i] = guild.emojis.cache.find(emoji => emoji.name === i).toString();
 		}
 		await general.set_emojis(emojis)
+
+		async function test() {
+			console.log("test")
+		}
+		setInterval(test, 1000)
 	},
 };
 

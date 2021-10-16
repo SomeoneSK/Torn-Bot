@@ -8,7 +8,7 @@ const components = require('../helper_functions/components.js')
 const responses = require('../responses')
 const torn = require('../torn')
 
-async function item(item_id, interaction, info = false) {
+async function item(interaction, item_id, info = false) {
 	if (info === false) {
 		url = general.make_url( "torn", id="", selections=["items"] )
 		info = await general.get_data_from_api( url, user_id=interaction.user.id, private=false )
@@ -55,11 +55,11 @@ async function item(item_id, interaction, info = false) {
 		.setThumbnail(item["image"])
 
 	async function market() {
-		let market_response = await responses.item_market(item_id, interaction)
+		let market_response = await responses.item_market(interaction, item_id)
 		await interaction.editReply( market_response )
 	}
 	async function bazaar() {
-		let bazaar_response = await responses.item_bazaar(item_id, interaction)
+		let bazaar_response = await responses.item_bazaar(interaction, item_id)
 		await interaction.editReply( bazaar_response )
 	}
 

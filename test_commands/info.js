@@ -13,3 +13,4 @@ module.exports = {
 		await interaction.reply('Gif!');
 	},
 }
+

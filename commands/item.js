@@ -17,6 +17,6 @@ module.exports = {
 	async execute(interaction) {
 		let item = interaction.options.getString('item');
 
-		return await interaction.reply( await responses.item(item, interaction) )
+		return await interaction.reply( await responses.item(interaction, item) )
 	},
 };
