@@ -16,7 +16,7 @@ the_command.addSubcommandGroup((group) =>
 				.setName('reach')
 				.setDescription("Sets a new alert that will ping you when some stock property will reach some value.")
 				.addStringOption((option) =>
-					option.setName('stock').setDescription('The stock').setRequired(true),
+					option.setName('stock').setDescription('The stock - use stock acronym').setRequired(true),
 				)
 				.addStringOption((option) =>
 					option
@@ -45,7 +45,7 @@ the_command.addSubcommandGroup((group) =>
 			),
 );
 
-general.add_stock_options(the_command.options[0].options[0].options[0])
+//general.add_stock_options(the_command.options[0].options[0].options[0])
 
 async function execute(interaction) {
 	new_alert_command.new_alert_command(interaction)

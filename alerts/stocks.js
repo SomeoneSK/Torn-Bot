@@ -1,9 +1,14 @@
 const alerts_general = require('./general.js')
 const factories = require('./factories')
+const torn = require('../torn')
 
 
 async function new_stock_alert_reach(interaction) {
-	let stock = interaction.options.get("stock").value
+	let stock = interaction.options.get("stock").value.toUpperCase()
+	if ( !Object.keys(torn.stocks).includes(stock) ) {
+		await interaction.reply( {content: "Wrong stock acronym - choose from: " + Object.keys(torn.stocks).join(", ") } )
+		return false
+	}
 	let higher_or_lower = interaction.options.get("higher-or-lower").value
 	let value = interaction.options.get("value").value
 	let property = interaction.options.get("property").value
