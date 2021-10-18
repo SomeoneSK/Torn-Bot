@@ -1,6 +1,8 @@
 const global_data = require('../global_data.js')
 const general = require('../general.js')
 
+const checks = require('../alerts/checks')
+
 module.exports = {
 	name: 'ready',
 	once: true,
@@ -16,10 +18,9 @@ module.exports = {
 		}
 		await general.set_emojis(emojis)
 
-		async function test() {
-			console.log("test")
-		}
-		setInterval(test, 1000)
+		general.makeClient(client)
+
+		await checks.starts_checks()
 	},
 };
 

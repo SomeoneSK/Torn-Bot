@@ -1,3 +1,6 @@
+const from_db = require('./alerts/from_db.js')
+
+
 var data = {
 	"players":{},
 	"general":{
@@ -5,7 +8,10 @@ var data = {
 			"apis": [],
 			"index": -1
 		}
-	}
+	},
+	"alerts": [
+
+	]
 }
 
 const { MongoClient } = require('mongodb');
@@ -15,12 +21,21 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 async function make_data(){
 	await client.connect();
+	
 	const players = client.db("database0").collection("players");
-	const result = await players.find( {} )
-
+	let result = await players.find( {} )
 	await result.forEach( function(i) {
-		data["players"][ i["discord_id"].toString() ] =  i 
-		data["general"]["shared_apis"]["apis"].push( {"discord_id":i["discord_id"] } )
+		data["players"][ i["discord_id"].toString() ] =  i
+		if ( i["share_api_key"] === true ) {
+			data["general"]["shared_apis"]["apis"].push( {"discord_id":i["discord_id"] } )
+		}
+	} )
+
+	const alerts = client.db("database0").collection("alerts");
+	result = await alerts.find( {} )
+	await result.forEach( async function(i) {
+		let alert = await from_db.from_db( i )
+		data["alerts"].push( alert )
 	} )
 
 	console.log(data)
@@ -41,6 +56,8 @@ async function setData(new_data, update) {
 	client.close();
 	return "done"
 };
+
+
 
 exports.getData = getData;
 exports.setData = setData;

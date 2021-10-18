@@ -1,6 +1,7 @@
 const axios = require('axios');
 const global_data = require('./global_data.js')
 const id_api_stuff = require('./helper_functions/id_api_stuff.js')
+const torn = require('./torn')
 
 
 function get_user( user_id=false ) {
@@ -157,8 +158,13 @@ function make_random_str(length) {
    return result;
 }
 
-function copy(object) {
-	return Object.assign({}, object )
+function copy(obj) {
+    if (null == obj || "object" != typeof obj) return obj;
+    var copy = obj.constructor();
+    for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+    }
+    return copy;
 }
 
 let emojis = {} 
@@ -174,9 +180,34 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function add_stock_options(option) {
+	for (let acronym of Object.keys(torn.stocks)) {
+		option.addChoice(torn.stocks[acronym].name + " - " + acronym, acronym)
+	}
+	return option
+}
+
+function delete_from_list_by_key(list, key, value) {
+	let new_list = list.filter(x => {
+		return x[key] != value;
+	})
+	return new_list
+}
+
+let client = undefined
+function getCient() {
+  return client;
+};
+async function makeClient(new_client){
+	client = new_client
+}
+exports.getCient = getCient;
+exports.makeClient = makeClient;
+
 
 exports.http_request = http_request;
 exports.get_data_from_api = get_data_from_api;
+exports.get_data_from_api_shared = get_data_from_api_shared;
 exports.make_url = make_url;
 exports.make_link = make_link;
 exports.format_number = format_number;
@@ -186,3 +217,5 @@ exports.copy = copy;
 exports.set_emojis = set_emojis;
 exports.get_emoji = get_emoji;
 exports.sleep = sleep;
+exports.add_stock_options = add_stock_options;
+exports.delete_from_list_by_key = delete_from_list_by_key;
