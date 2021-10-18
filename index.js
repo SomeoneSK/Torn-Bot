@@ -1,3 +1,6 @@
+const host = require('./host.js')
+host.host()
+
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const fs = require('fs');
@@ -6,6 +9,8 @@ const { clientId, guildId } = require('./config.json');
 const token = process.env['token']
 
 const data = require('./global_data.js')
+const general = require('./general.js')
+
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] })
 
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
@@ -31,7 +36,9 @@ client.on('interactionCreate', async interaction => {
 		await command.execute(interaction);
 	} catch (error) {
 		console.error(error);
-		return interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+		let chan = await general.get_channel("899743106482704434")
+		chan.send( error + "          a" )
 	}
 });
 

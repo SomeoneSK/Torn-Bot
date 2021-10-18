@@ -21,6 +21,13 @@ module.exports = {
 		general.makeClient(client)
 
 		await checks.starts_checks()
+
+		async function send_msg() {
+			let chan = await general.get_channel("899732115384594442")
+			let now = new Date()
+			chan.send( now.toString() )
+		}
+		setInterval(send_msg, 1000*60*15)
 	},
 };
 

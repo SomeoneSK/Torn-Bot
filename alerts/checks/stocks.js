@@ -14,7 +14,7 @@ async function stocks() {
 		}
 	}
 	
-	setTimeout(stocks, 1000*10)
+	setTimeout(stocks, 1000*60)
 }
 
 exports.stocks = stocks;

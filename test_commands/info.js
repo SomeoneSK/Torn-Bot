@@ -10,6 +10,7 @@ module.exports = {
 				.setDescription('Info about a user')
 				.addUserOption(option => option.setName('target').setDescription('The user'))),
 	async execute(interaction) {
+		interaction.aaa()
 		await interaction.reply('Gif!');
 	},
 }
