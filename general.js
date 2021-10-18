@@ -204,6 +204,20 @@ async function makeClient(new_client){
 exports.getCient = getCient;
 exports.makeClient = makeClient;
 
+async function mention_user(id) {
+	let to_mention = await client.users.fetch( id )
+	if ( to_mention === undefined) {
+		return undefined
+	}
+	let mention = to_mention.toString()
+	return mention
+}
+exports.mention_user = mention_user;
+
+async function get_channel(id) {
+	return await client.channels.cache.get(id)
+}
+exports.get_channel = get_channel;
 
 exports.http_request = http_request;
 exports.get_data_from_api = get_data_from_api;

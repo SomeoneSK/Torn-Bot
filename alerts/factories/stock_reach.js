@@ -35,17 +35,14 @@ async function stock_reach(stock, higher_or_lower, property, value, owner, to_pi
 
 			let client = general.getCient()
 
-			let chan = client.channels.cache.get(this.channel)
+			let chan = await general.get_channel(this.channel)
 
-			let to_mention = undefined
+			let mention = undefined
 			if ( this.to_ping.type === "user" ) {
-				to_mention = await client.users.fetch( this.to_ping.id )
+				mention = await general.mention_user( this.to_ping.id )
 			}
-			if ( chan !== undefined && to_mention !== undefined ) {
-				let mention = ""
-				if ( this.to_ping.type === "user" ) {
-					mention = to_mention.toString()
-				}
+
+			if ( chan !== undefined && mention !== undefined ) {
 				chan.send(mention + ", **" + this.alert.stock + "**'s **" +  this.alert.property.replace("_", " ") + "** is now " + this.alert.higher_or_lower + " than " + this.alert.value + " - it's **" + stocks["stocks"][id][this.alert.property] + "** !")
 			}
 			alerts_general.delete_alert(this.code)
