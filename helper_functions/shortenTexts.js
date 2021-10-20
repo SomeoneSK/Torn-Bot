@@ -1,6 +1,6 @@
 const general = require('../general.js')
 
-function shorten_texts(desc) {
+function shortenText(desc) {
 	desc = desc.replace(" hours ", " hrs ")
 	desc = desc.replace(" minutes ", " mins ")
 	desc = desc.replace(" seconds ", " secs ")
@@ -31,4 +31,8 @@ function shorten_texts(desc) {
 	return desc
 }
 
-exports.shorten_texts = shorten_texts;
+const ShortenTextsFunctions = {
+	shortenText: shortenText,
+}
+
+exports.ShortenTextsFunctions = ShortenTextsFunctions;

@@ -4,7 +4,7 @@ const {Database} = require("../database.js")
 const general = require('../general.js')
 const error = require('./error.js')
 
-const company_stuff = require('../helper_functions/company_stuff.js')
+const {CompanyFunctions} = require("../helper_functions/company.js")
 const components = require('../helper_functions/components.js')
 const responses = require('../responses')
 const torn = require('../torn')
@@ -36,7 +36,7 @@ async function company_profile(interaction, id, info = false) {
 		info = info["company"]
 	}
 
-	let employees_info = await company_stuff.employees_info(info)
+	let employees_info = await CompanyFunctions.employees_info(info)
 	let field1 = '**' + info["rating"] + "⭐ " + torn.companies[info["company_type"]]["name"] + '**'
 	field1 += '\n**Director: **' +employees_info["director_name"] + " [" + info["director"] + "]"
 	field1 += '\n**Age: **' + general.format_number(info["days_old"]) + " days"

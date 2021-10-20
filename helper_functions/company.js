@@ -18,5 +18,9 @@ async function employees_info(company) {
 	return {"employees_count":count, "director_name":director}
 }
 
-exports.get_users_company = get_users_company;
-exports.employees_info = employees_info;
+const CompanyFunctions = {
+	get_users_company: get_users_company,
+	employees_info: employees_info,
+}
+
+exports.CompanyFunctions = CompanyFunctions;

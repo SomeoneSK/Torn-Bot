@@ -2,7 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 const general = require('../general.js')
 
-const id_api_stuff = require('../helper_functions/id_api_stuff.js')
+const {IdApiFunctions} = require("../helper_functions/idApi.js")
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -19,7 +19,7 @@ module.exports = {
 		if (key === null) { key = ""; to_send = "Unset your API!" }
 		let interaction_from = interaction.user
 		
-		await id_api_stuff.set_users_key( interaction_from.id, key )
+		await IdApiFunctions.set_users_key( interaction_from.id, key )
 
 		return await interaction.reply( {content: to_send} )
 	},

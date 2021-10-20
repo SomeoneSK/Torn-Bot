@@ -3,11 +3,10 @@ const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = req
 const general = require('../general.js')
 const error = require('./error.js')
 
-const faction_stuff = require('../helper_functions/faction_stuff.js')
 const components = require('../helper_functions/components.js')
 const responses = require('../responses')
 const embeds = require('../helper_functions/embeds.js')
-const shorten_texts = require('../helper_functions/shorten_texts.js')
+const {ShortenTextsFunctions} = require("../helper_functions/shortenTexts.js")
 
 async function faction_members(interaction, info, page = 1) {
 	let fields = []
@@ -18,7 +17,7 @@ async function faction_members(interaction, info, page = 1) {
 		field1 += "\n" + general.make_link("player_profile", id=id, format=member["name"] + "[" + id + "]")
 		field1 += " - " + member["level"]
 		field1 += "\n" + member["days_in_faction"] + ", " + member["position"]
-		field1 += shorten_texts.shorten_texts( "\n" + member["last_action"]["status"] + " " + member["status"]["description"] + ", " + member["last_action"]["relative"] )
+		field1 += ShortenTextsFunctions.shortenText( "\n" + member["last_action"]["status"] + " " + member["status"]["description"] + ", " + member["last_action"]["relative"] )
 	}
 
 	fields.push( { name: 'Members', value: field1, inline: true } )

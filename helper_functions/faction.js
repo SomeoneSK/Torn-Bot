@@ -23,5 +23,9 @@ async function members_info(faction) {
 	return {"members_count":count, "leader_name":leader, "coleader_name":coleader}
 }
 
-exports.get_users_faction = get_users_faction;
-exports.members_info = members_info;
+const FactionFunctions = {
+	members_info: members_info,
+	get_users_faction: get_users_faction,
+}
+
+exports.FactionFunctions = FactionFunctions;

@@ -4,7 +4,7 @@ const {Database} = require("../database.js")
 const general = require('../general.js')
 const error = require('./error.js')
 
-const faction_stuff = require('../helper_functions/faction_stuff.js')
+const {FactionFunctions} = require("../helper_functions/faction.js")
 const components = require('../helper_functions/components.js')
 const responses = require('../responses')
 
@@ -31,7 +31,7 @@ async function faction_profile(interaction, id, info = false) {
 
 	let fields = []
 
-	let members_info = await faction_stuff.members_info(info)
+	let members_info = await FactionFunctions.members_info(info)
 	let field1 = '\n**Respect: **' + general.format_number(info["respect"])
 	field1 += '**\nLeader: **' + members_info["leader_name"] + " [" + info["leader"] + "]"
 	field1 += '\n**Co-Leader: **' + members_info["coleader_name"] + " [" + info["co-leader"] + "]"

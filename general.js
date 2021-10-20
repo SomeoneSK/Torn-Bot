@@ -1,7 +1,7 @@
 const axios = require('axios');
 const {Database} = require("./database.js")
 
-const id_api_stuff = require('./helper_functions/id_api_stuff.js')
+const {IdApiFunctions} = require("./helper_functions/idApi.js")
 const torn = require('./torn')
 
 
@@ -60,7 +60,7 @@ async function get_data_from_api_shared(url) {
 			let index = data["general"]["shared_apis"]["index"]
 
 			if ( [2, 10].includes(result["error"]["code"]) ) {
-				await id_api_stuff.share_users_key(data["general"]["shared_apis"]["apis"][index_used]["discord_id"], share=false)
+				await IdApiFunctions.share_users_key(data["general"]["shared_apis"]["apis"][index_used]["discord_id"], share=false)
 			}
 			if(index === start_index) {
 				return {"error":"All shared APIs failed!"}

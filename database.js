@@ -54,7 +54,7 @@ async function setData(new_data, update) {
 	return "done"
 };
 
-let Database = {
+const Database = {
 	getData: getData,
 	setData: setData,
 	makeData: makeData
