@@ -1,4 +1,4 @@
-const global_data = require('../global_data.js')
+const {Database} = require("../database.js")
 
 async function set_users_key(user_id, key="") {
 	let filter = {"discord_id": user_id.toString() }
@@ -8,13 +8,13 @@ async function set_users_key(user_id, key="") {
 	}
 	let operation1 = {"updateOne": { filter: filter, update: update } }
 
-	data = global_data.getData()
+	data = Database.getData()
 	data["players"][ user_id.toString() ]["torn_api_key"] = key
-	a = await global_data.setData( data, {"players": [ operation1 ] } )
+	a = await Database.setData( data, {"players": [ operation1 ] } )
 }
 
 async function share_users_key(user_id, share=false) {
-	data = global_data.getData()
+	data = Database.getData()
 	let this_player = data["players"][user_id.toString()]
 
 	if (this_player["torn_api_key"] === "") {
@@ -50,7 +50,7 @@ async function share_users_key(user_id, share=false) {
 
 	let operation2 = {"updateOne": { filter: filter2, update: update2 } }
 
-	data = await global_data.setData( data, {"players": [ operation1 ], "general": [operation2] } )
+	data = await Database.setData( data, {"players": [ operation1 ], "general": [operation2] } )
 
 	if ( share === true ) {
 		return "Your API key is now shared (only for public info)!"

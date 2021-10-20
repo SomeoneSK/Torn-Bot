@@ -8,7 +8,7 @@ const { Client, Collection, Intents, MessageActionRow, MessageButton, MessageEmb
 const { clientId, guildId } = require('./config.json');
 const token = process.env['token']
 
-const data = require('./global_data.js')
+const {Database} = require("./database.js")
 const general = require('./general.js')
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] })

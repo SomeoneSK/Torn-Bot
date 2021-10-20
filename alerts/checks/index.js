@@ -1,4 +1,4 @@
-const global_data = require('../../global_data.js')
+const {Database} = require("../../database.js")
 const general = require('../../general.js')
 
 const stocks = require('./stocks.js')

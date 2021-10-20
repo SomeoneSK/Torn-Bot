@@ -1,6 +1,6 @@
 const factories = require('./factories')
 
-async function from_db(alert) {
+async function db_alert_to_alert(alert) {
 	if (alert.alert.type === "stocks.reach") {
 		let alerts = await factories.stock_reach(alert.alert.stock, alert.alert.higher_or_lower, alert.alert.property, alert.alert.value, alert.owner, alert.to_ping, alert.channel, code=alert.code)
 		return alerts.alert
@@ -8,4 +8,4 @@ async function from_db(alert) {
 	return alert
 }
 
-exports.from_db = from_db;
+exports.db_alert_to_alert = db_alert_to_alert;

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
-const global_data = require('../global_data.js')
+const {Database} = require("../database.js")
 const general = require('../general.js')
 const error = require('./error.js')
 
@@ -10,7 +10,7 @@ const responses = require('../responses')
 
 async function faction_profile(interaction, id, info = false) {
 	if ( info === false ) {
-		let data = global_data.getData()
+		let data = Database.getData()
 		let url = ""
 		if ( id === null ) {
 			if ( !Object.keys(data["players"]).includes(interaction.user.id.toString()) || data["players"][ interaction.user.id.toString() ]["torn_api_key"] === "") {

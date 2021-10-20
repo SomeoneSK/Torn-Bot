@@ -1,6 +1,3 @@
-const from_db = require('./alerts/from_db.js')
-
-
 var data = {
 	"players":{},
 	"general":{
@@ -19,7 +16,7 @@ const db_string = process.env['db_string']
 const uri = db_string
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-async function make_data(){
+async function makeData(){
 	await client.connect();
 	
 	const players = client.db("database0").collection("players");
@@ -34,7 +31,7 @@ async function make_data(){
 	const alerts = client.db("database0").collection("alerts");
 	result = await alerts.find( {} )
 	await result.forEach( async function(i) {
-		let alert = await from_db.from_db( i )
+		let alert = await db_alert_to_alert.db_alert_to_alert( i )
 		data["alerts"].push( alert )
 	} )
 
@@ -57,9 +54,18 @@ async function setData(new_data, update) {
 	return "done"
 };
 
+let Database = {
+	getData: getData,
+	setData: setData,
+	makeData: makeData
+}
 
+exports.Database = Database;
 
+const db_alert_to_alert = require('./alerts/db_alert_to_alert.js')
+
+/*
 exports.getData = getData;
 exports.setData = setData;
 exports.make_data = make_data;
-
+*/

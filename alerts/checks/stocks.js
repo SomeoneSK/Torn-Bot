@@ -1,8 +1,9 @@
-const global_data = require('../../global_data.js')
+const {Database} = require("../../database.js")
+
 const general = require('../../general.js')
 
 async function stocks() {
-	let data = global_data.getData()
+	let data = Database.getData()
 
 	let url = general.make_url( "torn", id="", selections=["stocks"] )
 	info = await general.get_data_from_api_shared( url )

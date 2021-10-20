@@ -1,4 +1,4 @@
-const global_data = require('../global_data.js')
+const {Database} = require("../database.js")
 const general = require('../general.js')
 
 const checks = require('../alerts/checks')
@@ -8,7 +8,7 @@ module.exports = {
 	once: true,
 	async execute(client) {
 		console.log(`Ready! Logged in as ${client.user.tag}`);
-		await global_data.make_data()
+		await Database.makeData()
 
 		let guild = client.guilds.cache.get('892037665719984128')
 		let names = ["offline", "online", "idle", "in_hospital", "traveling", "in_jail"]

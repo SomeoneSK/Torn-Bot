@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
-const global_data = require('../global_data.js')
+const {Database} = require("../database.js")
 const general = require('../general.js')
 const error = require('./error.js')
 
@@ -9,7 +9,7 @@ const embeds = require('../helper_functions/embeds.js')
 
 async function player_profile(interaction, id, info=false) {
 	if ( info === false ) {
-		let data = global_data.getData()
+		let data = Database.getData()
 		if ( id === null ) {
 			if ( !Object.keys(data["players"]).includes(interaction.user.id.toString()) ) {
 				return await error.error( "Set your ID with /setid or use ID in this command!" )

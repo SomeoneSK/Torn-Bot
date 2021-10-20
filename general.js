@@ -1,11 +1,12 @@
 const axios = require('axios');
-const global_data = require('./global_data.js')
+const {Database} = require("./database.js")
+
 const id_api_stuff = require('./helper_functions/id_api_stuff.js')
 const torn = require('./torn')
 
 
 function get_user( user_id=false ) {
-	data = global_data.getData()
+	data = Database.getData()
 	if ( Object.keys( data["players"] ).includes( user_id.toString() )  ) {
 		return data["players"][ user_id.toString() ]
 	}
@@ -13,12 +14,12 @@ function get_user( user_id=false ) {
 }
 
 async function get_shared_api_key() {
-	data = global_data.getData()
+	data = Database.getData()
 	data["general"]["shared_apis"]["index"] += 1
 	if ( data["general"]["shared_apis"]["index"] > data["general"]["shared_apis"]["apis"].length -1 ) {
 		data["general"]["shared_apis"]["index"] = 0
 	}
-	await global_data.setData(data, {})
+	await Database.setData(data, {})
 	let discord_id =  data["general"]["shared_apis"]["apis"][ data["general"]["shared_apis"]["index"] ]["discord_id"]
 	return data["players"][ discord_id.toString() ]["torn_api_key"]
 }
@@ -43,7 +44,7 @@ async function http_request(url) {
 }
 
 async function get_data_from_api_shared(url) {
-	let data = global_data.getData()
+	let data = Database.getData()
 	let key = await get_shared_api_key()
 	let start_index = data["general"]["shared_apis"]["index"]
 	let index_used = data["general"]["shared_apis"]["index"]
@@ -54,7 +55,7 @@ async function get_data_from_api_shared(url) {
 				return result
 			}
 
-			data = global_data.getData()
+			data = Database.getData()
 			key = await get_shared_api_key()
 			let index = data["general"]["shared_apis"]["index"]
 

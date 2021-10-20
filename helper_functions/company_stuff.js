@@ -1,4 +1,3 @@
-const global_data = require('../global_data.js')
 
 async function get_users_company(interaction_from) {
 	let id = data["players"][ interaction_from.id.toString() ]["torn_id"]
