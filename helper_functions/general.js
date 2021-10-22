@@ -1,8 +1,8 @@
 const axios = require('axios');
-const {Database} = require("./database.js")
+const {Database} = require(".././database.js")
 
-const {IdApiFunctions} = require("./helper_functions/idApi.js")
-const torn = require('./torn')
+const {Id_api_functions} = require("./id_api.js")
+const {Torn_data} = require('.././torn')
 
 
 function get_user( user_id=false ) {
@@ -20,7 +20,7 @@ async function get_shared_api_key() {
 		data["general"]["shared_apis"]["index"] = 0
 	}
 	await Database.setData(data, {})
-	let discord_id =  data["general"]["shared_apis"]["apis"][ data["general"]["shared_apis"]["index"] ]["discord_id"]
+	let discord_id = data["general"]["shared_apis"]["apis"][ data["general"]["shared_apis"]["index"] ]["discord_id"]
 	return data["players"][ discord_id.toString() ]["torn_api_key"]
 }
 
@@ -33,7 +33,6 @@ function get_users_key(user_id=false) {
 }
 
 async function http_request(url) {
-	console.log(url)
 	try {
 		const response = await axios.get(url);
 		return response.data
@@ -58,9 +57,8 @@ async function get_data_from_api_shared(url) {
 			data = Database.getData()
 			key = await get_shared_api_key()
 			let index = data["general"]["shared_apis"]["index"]
-
 			if ( [2, 10].includes(result["error"]["code"]) ) {
-				await IdApiFunctions.share_users_key(data["general"]["shared_apis"]["apis"][index_used]["discord_id"], share=false)
+				await Id_api_functions.share_users_key(data["general"]["shared_apis"]["apis"][index_used]["discord_id"], share=false)
 			}
 			if(index === start_index) {
 				return {"error":"All shared APIs failed!"}
@@ -70,7 +68,6 @@ async function get_data_from_api_shared(url) {
 		}
 		return result
 	}
-
 	return res
 }
 
@@ -80,11 +77,9 @@ async function get_data_from_api( url, user_id=false, private=false ) {
 		res = await http_request(url + key)
 		return res
 	}
-
 	if ( private === false ) {
 		return await get_data_from_api_shared(url)
 	}
-
 	return { "error": "You did not set your api!"}
 };
 
@@ -138,25 +133,23 @@ function make_link(which, id="", format=false) {
 }
 
 function isInt(value) {
-  return !isNaN(value) && 
-         parseInt(Number(value)) == value && 
-         !isNaN(parseInt(value, 10));
+  return !isNaN(value) && parseInt(Number(value)) == value && !isNaN(parseInt(value, 10));
 }
 
 function format_number(number) {
-	if ( !isInt(number) ) {number = number.toString() }
+	if ( number === null ) { return 0 }
+	if ( !isInt(number) ) { number = number.toString() }
 	return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function make_random_str(length) {
-    var result           = '';
-    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for ( var i = 0; i < length; i++ ) {
-      result += characters.charAt(Math.floor(Math.random() * 
- charactersLength));
-   }
-   return result;
+	var result = '';
+	var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var charactersLength = characters.length;
+	for ( var i = 0; i < length; i++ ) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	}
+	return result;
 }
 
 function copy(obj) {
@@ -177,8 +170,8 @@ function sleep(ms) {
 }
 
 function add_stock_options(option) {
-	for (let acronym of Object.keys(torn.stocks)) {
-		option.addChoice(torn.stocks[acronym].name + " - " + acronym, acronym)
+	for (let acronym of Object.keys(Torn_data.stocks)) {
+		option.addChoice(Torn_data.stocks[acronym].name + " - " + acronym, acronym)
 	}
 	return option
 }
@@ -197,8 +190,6 @@ function getCient() {
 async function makeClient(new_client){
 	client = new_client
 }
-exports.getCient = getCient;
-exports.makeClient = makeClient;
 
 async function mention_user(id) {
 	let to_mention = await client.users.fetch( id )
@@ -208,24 +199,30 @@ async function mention_user(id) {
 	let mention = to_mention.toString()
 	return mention
 }
-exports.mention_user = mention_user;
 
 async function get_channel(id) {
 	return await client.channels.cache.get(id)
 }
-exports.get_channel = get_channel;
 
-exports.http_request = http_request;
-exports.get_data_from_api = get_data_from_api;
-exports.get_data_from_api_shared = get_data_from_api_shared;
-exports.make_url = make_url;
-exports.make_link = make_link;
-exports.format_number = format_number;
-exports.get_users_key = get_users_key;
-exports.make_random_str = make_random_str;
-exports.copy = copy;
-exports.set_emojis = set_emojis;
-exports.get_emoji = get_emoji;
-exports.sleep = sleep;
-exports.add_stock_options = add_stock_options;
-exports.delete_from_list_by_key = delete_from_list_by_key;
+const General_functions = {
+	getCient: getCient,
+	makeClient: makeClient,
+	mention_user: mention_user,
+	get_channel: get_channel,
+	http_request: http_request,
+	get_data_from_api: get_data_from_api,
+	get_data_from_api_shared: get_data_from_api_shared,
+	make_url: make_url,
+	make_link: make_link,
+	format_number: format_number,
+	get_users_key: get_users_key,
+	make_random_str: make_random_str,
+	copy: copy,
+	set_emojis: set_emojis,
+	get_emoji: get_emoji,
+	sleep: sleep,
+	add_stock_options: add_stock_options,
+	delete_from_list_by_key: delete_from_list_by_key,
+}
+
+exports.General_functions = General_functions;

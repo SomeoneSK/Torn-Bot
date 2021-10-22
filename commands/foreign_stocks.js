@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
-const general = require('../general.js')
 
-const responses = require('../responses')
+const {Message_constructors} = require('../message_constructors')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -27,6 +26,6 @@ module.exports = {
 	async execute(interaction) {
 		let country = interaction.options.getString('country');
 
-		return await interaction.reply( await responses.foreign_stocks(interaction=interaction, country_name = country) )
+		return await interaction.reply( await Message_constructors.foreign_stocks(interaction=interaction, country_name = country) )
 	},
 };

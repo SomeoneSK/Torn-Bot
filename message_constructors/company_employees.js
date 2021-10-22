@@ -1,12 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
-const general = require('../general.js')
-const error = require('./error.js')
+const {General_functions} = require("../helper_functions/general.js")
 
-const {ShortenTextsFunctions} = require("../helper_functions/shortenTexts.js")
-const components = require('../helper_functions/components.js')
-const responses = require('../responses')
-const embeds = require('../helper_functions/embeds.js')
+const {Shorten_texts_functions} = require("../helper_functions/shorten_texts.js")
+const {Components_functions} = require('../helper_functions/components.js')
+const {Message_constructors} = require('../message_constructors')
+const {Embed_functions} = require('../helper_functions/embeds.js')
 
 async function company_employees(interaction, info, page = 1) {
 	let fields = []
@@ -24,9 +23,9 @@ async function company_employees(interaction, info, page = 1) {
 		}
 		index += 1
 		let member = info["employees"][id]
-		field1 += "\n" + general.make_link("player_profile", id=id, format=member["name"] + "[" + id + "]")
+		field1 += "\n" + General_functions.make_link("player_profile", id=id, format=member["name"] + "[" + id + "]")
 		field1 += "\n" + member["days_in_company"] + ", " + member["position"]
-		field1 += ShortenTextsFunctions.shortenText( "\n" + member["last_action"]["status"] + " " + member["status"]["description"] + ", " + member["last_action"]["relative"] )
+		field1 += Shorten_texts_functions.shortenText( "\n" + member["last_action"]["status"] + " " + member["status"]["description"] + ", " + member["last_action"]["relative"] )
 	}
 
 	fields.push( { name: 'Employees', value: field1, inline: true } )
@@ -36,23 +35,23 @@ async function company_employees(interaction, info, page = 1) {
 	const embed = new MessageEmbed()
 		.setColor('#0099ff')
 		.setTitle(info["name"] + " [" + info["ID"] + "]")
-		.setURL( general.make_link("company_profile", info["ID"]) )
+		.setURL( General_functions.make_link("company_profile", info["ID"]) )
 		.setDescription( "Name [ID] Level\nDays in Company, Position\nStatus, Last Action" )
 		.addFields(fields)
 		.setTimestamp()
 		.setFooter('Page 1/1', '');
 
 	async function profile() {
-		let profile = await responses.company_profile(interaction=interaction, id=0, info = info)
+		let profile = await Message_constructors.company_profile(interaction=interaction, id=0, info = info)
 		await interaction.editReply( profile )
 	}
 
-	let profile_button = await components.button(interaction = interaction, button_id = "profile", button_label = "Profile", button_style="PRIMARY", func = profile)
+	let profile_button = await Components_functions.button(interaction = interaction, button_id = "profile", button_label = "Profile", button_style="PRIMARY", func = profile)
 
 	const row = new MessageActionRow()
 			.addComponents(profile_button)
 
-	let the_reply = await embeds.check_reply({ embeds: [embed], components: [row] }, interaction)
+	let the_reply = await Embed_functions.check_reply({ embeds: [embed], components: [row] }, interaction)
 
 	return the_reply
 }

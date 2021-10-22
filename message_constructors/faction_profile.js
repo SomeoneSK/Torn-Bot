@@ -1,12 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 const {Database} = require("../database.js")
-const general = require('../general.js')
-const error = require('./error.js')
+const {General_functions} = require("../helper_functions/general.js")
 
-const {FactionFunctions} = require("../helper_functions/faction.js")
-const components = require('../helper_functions/components.js')
-const responses = require('../responses')
+
+const {Faction_functions} = require("../helper_functions/faction.js")
+const {Components_functions} = require('../helper_functions/components.js')
+const {Message_constructors} = require('../message_constructors')
 
 async function faction_profile(interaction, id, info = false) {
 	if ( info === false ) {
@@ -16,28 +16,31 @@ async function faction_profile(interaction, id, info = false) {
 			if ( !Object.keys(data["players"]).includes(interaction.user.id.toString()) || data["players"][ interaction.user.id.toString() ]["torn_api_key"] === "") {
 				return await error.error( "Set your api with /setapi or use ID in this command!" )
 			}
-			url = general.make_url( "faction", id="", selections=[""] )
+			url = General_functions.make_url( "faction", id="", selections=[""] )
 		} else {
-			url = general.make_url( "faction", id=id, selections=[""] )
+			url = General_functions.make_url( "faction", id=id, selections=[""] )
 		}
 
-		info = await general.get_data_from_api( url, user_id=interaction.user.id, private=false )
+		info = await General_functions.get_data_from_api( url, user_id=interaction.user.id, private=false )
 	}
 
 
 	if ( info["error"] !== undefined ) {
-		return await error.error(info["error"])
+		return await Message_constructors.error(info["error"])
+	}
+	if ( info["ID"] === null ) {
+		return await Message_constructors.error("Faction with such ID does not exist!")
 	}
 
 	let fields = []
 
-	let members_info = await FactionFunctions.members_info(info)
-	let field1 = '\n**Respect: **' + general.format_number(info["respect"])
+	let members_info = await Faction_functions.members_info(info)
+	let field1 = '\n**Respect: **' + General_functions.format_number(info["respect"])
 	field1 += '**\nLeader: **' + members_info["leader_name"] + " [" + info["leader"] + "]"
 	field1 += '\n**Co-Leader: **' + members_info["coleader_name"] + " [" + info["co-leader"] + "]"
-	field1 += '\n**Age: **' + general.format_number(info["age"]) + " days"
-	field1 += '\n**Members: **' + members_info["members_count"] + "/" + general.format_number(info["capacity"])
-	field1 += '\n**Best Chain: **' + general.format_number(info["best_chain"])
+	field1 += '\n**Age: **' + General_functions.format_number(info["age"]) + " days"
+	field1 += '\n**Members: **' + members_info["members_count"] + "/" + General_functions.format_number(info["capacity"])
+	field1 += '\n**Best Chain: **' + General_functions.format_number(info["best_chain"])
 	fields.push( { name: 'Info', value: field1, inline: true } )
 
 	
@@ -47,7 +50,7 @@ async function faction_profile(interaction, id, info = false) {
 	const embed = new MessageEmbed()
 		.setColor('#0099ff')
 		.setTitle(info["name"] + " [" + info["ID"] + "] - " + info["tag"])
-		.setURL( general.make_link("faction_profile", info["ID"]) )
+		.setURL( General_functions.make_link("faction_profile", info["ID"]) )
 		//.setAuthor('Some name', 'https://i.imgur.com/AfFp7pu.png', 'https://discord.js.org')
 		//.setDescription(gender + " " + info["rank"] )
 		//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
@@ -58,11 +61,11 @@ async function faction_profile(interaction, id, info = false) {
 		.setFooter('Page 1/1', '');
 
 	async function members() {
-		let members = await responses.faction_members(interaction, info)
+		let members = await Message_constructors.faction_members(interaction, info)
 		await interaction.editReply( members )
 	}
 
-	let members_button = await components.button(interaction = interaction, button_id = "members", button_label = "Members", button_style="PRIMARY", func = members)
+	let members_button = await Components_functions.button(interaction = interaction, button_id = "members", button_label = "Members", button_style="PRIMARY", func = members)
 
 	const row = new MessageActionRow()
 			.addComponents(members_button)

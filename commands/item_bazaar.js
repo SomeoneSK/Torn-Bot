@@ -1,21 +1,20 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
-const general = require('../general.js')
 
-const responses = require('../responses')
+const {Message_constructors} = require('../message_constructors')
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('item-bazaar')
 		.setDescription('Shows bazaar listings of some item')
-		.addStringOption(option =>
+		.addIntegerOption(option =>
 		option.setName('item')
 			.setDescription('The item ID')
 			.setRequired(true)),
 
 	async execute(interaction) {
-		let item = interaction.options.getString('item');
+		let item = interaction.options.getInteger('item');
 
-		return await interaction.reply( await responses.item_bazaar(item, interaction) )
+		return await interaction.reply( await Message_constructors.item_bazaar(interaction, item) )
 	},
 };

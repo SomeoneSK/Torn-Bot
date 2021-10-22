@@ -1,10 +1,10 @@
-const general = require('../../general.js')
-const torn = require('../../torn')
-const alerts_general = require('../general.js')
+const {General_functions} = require("../../helper_functions/general.js")
+const {Torn_data} = require('../../torn')
+const {Alerts_general} = require('../general.js')
 
 async function stock_reach(stock, higher_or_lower, property, value, owner, to_ping, channel, code="") {
 	if ( code === "" ) {
-		code = await alerts_general.new_code()
+		code = await Alerts_general.new_code()
 	}
     let obj = {
 	   "code": code,
@@ -19,13 +19,13 @@ async function stock_reach(stock, higher_or_lower, property, value, owner, to_pi
 		"to_ping": to_ping,
 		"channel": channel
 	}
-	let obj_db = general.copy(obj)
+	let obj_db = General_functions.copy(obj)
 
 	obj.check = async function(stocks) {
 		if (!Object.keys(stocks).includes("stocks") ) {
 			return {done:false}
 		}
-		let id = torn.stocks[ this.alert.stock ]["id"]
+		let id = Torn_data.stocks[ this.alert.stock ]["id"]
 		
 		let difference = stocks["stocks"][id][this.alert.property] - this.alert.value
 		if ( this.alert.higher_or_lower === "lower"  ) {
@@ -33,19 +33,19 @@ async function stock_reach(stock, higher_or_lower, property, value, owner, to_pi
 		}
 		if ( difference >= 0  ) {
 
-			let client = general.getCient()
+			let client = General_functions.getCient()
 
-			let chan = await general.get_channel(this.channel)
+			let chan = await General_functions.get_channel(this.channel)
 
 			let mention = undefined
 			if ( this.to_ping.type === "user" ) {
-				mention = await general.mention_user( this.to_ping.id )
+				mention = await General_functions.mention_user( this.to_ping.id )
 			}
 
 			if ( chan !== undefined && mention !== undefined ) {
 				chan.send(mention + ", **" + this.alert.stock + "**'s **" +  this.alert.property.replace("_", " ") + "** is now " + this.alert.higher_or_lower + " than " + this.alert.value + " - it's **" + stocks["stocks"][id][this.alert.property] + "** !")
 			}
-			alerts_general.delete_alert(this.code)
+			Alerts_general.delete_alert(this.code)
 			return {done:true}
 		}
 		return {done:false}

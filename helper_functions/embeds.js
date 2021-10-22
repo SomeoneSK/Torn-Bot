@@ -1,5 +1,5 @@
-const general = require('../general.js')
-const components = require('../helper_functions/components.js')
+const {General_functions} = require("../helper_functions/general.js")
+const {Components_functions} = require('../helper_functions/components.js')
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 
 /*
@@ -24,7 +24,7 @@ async function check_reply(the_reply, interaction, fields_limit = 25) {
 }
 
 async function limit_embed(returning, interaction, fields_limit = 25) {
-	let embed = general.copy(returning.embeds[0] )
+	let embed = General_functions.copy(returning.embeds[0] )
 
 	for (let field of embed.fields) {
 		if ( field.value.length > 1024 ) {
@@ -79,7 +79,7 @@ async function limit_embed(returning, interaction, fields_limit = 25) {
 	}
 
 	embed.fields = the_messages[0]
-	returning.embeds = [ general.copy(embed) ]
+	returning.embeds = [ General_functions.copy(embed) ]
 
 	let current = 0
 	async function next_page() {
@@ -88,7 +88,7 @@ async function limit_embed(returning, interaction, fields_limit = 25) {
 		}
 		returning.embeds[0].fields = the_messages[current]
 		returning.embeds[0].footer.text = "Page " + (current + 1) + "/" + the_messages.length
-		let next_page_button = await components.button(interaction = interaction, button_id = "next_page", button_label = "Next Page", button_style="SECONDARY", func = next_page)
+		let next_page_button = await Components_functions.button(interaction = interaction, button_id = "next_page", button_label = "Next Page", button_style="SECONDARY", func = next_page)
 		returning.components[0].components[1] = next_page_button
 		await interaction.editReply( returning )
 	}
@@ -99,15 +99,15 @@ async function limit_embed(returning, interaction, fields_limit = 25) {
 		}
 		returning.embeds[0].fields = the_messages[current]
 		returning.embeds[0].footer.text = "Page " + (current + 1) + "/" + the_messages.length
-		let previous_page_button = await components.button(interaction = interaction, button_id = "previous_page", button_label = "Previous Page", button_style="SECONDARY", func = previous_page)
+		let previous_page_button = await Components_functions.button(interaction = interaction, button_id = "previous_page", button_label = "Previous Page", button_style="SECONDARY", func = previous_page)
 		returning.components[0].components[0] = previous_page_button
 		await interaction.editReply( returning )
 	}
 	
 	let buttons = []
 	if (the_messages.length > 1) {
-		let next_page_button = await components.button(interaction = interaction, button_id = "next_page", button_label = "Next", button_style="SECONDARY", func = next_page)
-		let previous_page_button = await components.button(interaction = interaction, button_id = "previous_page", button_label = "Previous", button_style="SECONDARY", func = previous_page)
+		let next_page_button = await Components_functions.button(interaction = interaction, button_id = "next_page", button_label = "Next", button_style="SECONDARY", func = next_page)
+		let previous_page_button = await Components_functions.button(interaction = interaction, button_id = "previous_page", button_label = "Previous", button_style="SECONDARY", func = previous_page)
 		buttons.push(previous_page_button)
 		buttons.push(next_page_button)
 	}
@@ -130,5 +130,8 @@ async function limit_embed(returning, interaction, fields_limit = 25) {
 	return returning
 }
 
-exports.limit_embed = limit_embed;
-exports.check_reply = check_reply;
+const Embed_functions = {
+	check_reply: check_reply,
+}
+
+exports.Embed_functions = Embed_functions;

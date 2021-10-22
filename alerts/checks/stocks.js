@@ -1,12 +1,12 @@
 const {Database} = require("../../database.js")
 
-const general = require('../../general.js')
+const {General_functions} = require("../../helper_functions/general.js")
 
 async function stocks() {
 	let data = Database.getData()
 
-	let url = general.make_url( "torn", id="", selections=["stocks"] )
-	info = await general.get_data_from_api_shared( url )
+	let url = General_functions.make_url( "torn", id="", selections=["stocks"] )
+	info = await General_functions.get_data_from_api_shared( url )
 
 	console.log("Checking " + data["alerts"].length + " stock alerts.")
 	for (let alert of data["alerts"]) {
@@ -20,3 +20,8 @@ async function stocks() {
 
 exports.stocks = stocks;
 
+const Stocks_alerts_checks = {
+	stocks: stocks,
+}
+
+exports.Stocks_alerts_checks = Stocks_alerts_checks;

@@ -1,11 +1,11 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 const {Database} = require("../database.js")
-const general = require('../general.js')
-const error = require('./error.js')
+const {General_functions} = require("../helper_functions/general.js")
 
-const components = require('../helper_functions/components.js')
-const embeds = require('../helper_functions/embeds.js')
+
+const {Message_constructors} = require('../message_constructors')
+const {Embed_functions} = require('../helper_functions/embeds.js')
 
 async function player_profile(interaction, id, info=false) {
 	if ( info === false ) {
@@ -16,12 +16,12 @@ async function player_profile(interaction, id, info=false) {
 			}
 			id = data["players"][ interaction.user.id.toString() ]["torn_id"]
 		}
-		let url = general.make_url( "user", id=id, selections=["profile"] )
-		info = await general.get_data_from_api( url, user_id=interaction.user.id, private=false )
+		let url = General_functions.make_url( "user", id=id, selections=["profile"] )
+		info = await General_functions.get_data_from_api( url, user_id=interaction.user.id, private=false )
 	}
 	
 	if ( info["error"] !== undefined ) {
-		return await error.error(info["error"])
+		return await Message_constructors.error(info["error"])
 	}
 
 	let gender = ":male_sign:"
@@ -32,13 +32,13 @@ async function player_profile(interaction, id, info=false) {
 	let fields = []
 
 	let field1 = '**Signup: **' + info["signup"]
-	field1 += '\n**Age: **' + general.format_number(info["age"]) + ' days'
-	field1 += '\n**Level: **' + general.format_number(info["level"])
-	field1 += '\n**Awards: **' + general.format_number(info["awards"])
-	field1 += '\n**Friends/Enemies: **' + general.format_number(info["friends"]) + "/" + general.format_number(info["enemies"])
-	field1 += '\n**Forum Posts: **' + general.format_number(info["forum_posts"])
-	field1 += '\n**Karma: **' + general.format_number(info["karma"])
-	field1 += '\n**Role: **' + general.format_number(info["role"])
+	field1 += '\n**Age: **' + General_functions.format_number(info["age"]) + ' days'
+	field1 += '\n**Level: **' + General_functions.format_number(info["level"])
+	field1 += '\n**Awards: **' + General_functions.format_number(info["awards"])
+	field1 += '\n**Friends/Enemies: **' + General_functions.format_number(info["friends"]) + "/" + General_functions.format_number(info["enemies"])
+	field1 += '\n**Forum Posts: **' + General_functions.format_number(info["forum_posts"])
+	field1 += '\n**Karma: **' + General_functions.format_number(info["karma"])
+	field1 += '\n**Role: **' + General_functions.format_number(info["role"])
 	fields.push( { name: 'Info', value: field1, inline: true } )
 	
 	let details = ''
@@ -46,34 +46,34 @@ async function player_profile(interaction, id, info=false) {
 		details = ' - ' + info["status"]["details"]
 	}
 	let field2 = ''
-	field2 += ':heart: ' + general.format_number(info["life"]['current']) + ' / ' + general.format_number(info["life"]['maximum'])
+	field2 += ':heart: ' + General_functions.format_number(info["life"]['current']) + ' / ' + General_functions.format_number(info["life"]['maximum'])
 	field2 += '\n**Status: **' + info["status"]["description"] + details
 	field2 += '\n**' + info["last_action"]["status"] + '** - ' + info["last_action"]["relative"]
 	let married = '\n**Spouse**: None'
 	if ( info["married"]["spouse_id"] !== 0 ) {
-		married = '\nMarried to ' + '[' + info["married"]["spouse_name"] + ' [' + info["married"]["spouse_id"] + ']](' + general.make_link("player_profile", id=info["married"]["spouse_id"]) + ')' + ' - ' + info["married"]["duration"] + ' days'
+		married = '\nMarried to ' + '[' + info["married"]["spouse_name"] + ' [' + info["married"]["spouse_id"] + ']](' + General_functions.make_link("player_profile", id=info["married"]["spouse_id"]) + ')' + ' - ' + info["married"]["duration"] + ' days'
 	}
 	field2 += married
 	let faction = '\n**Faction**: None'
 	if ( info["faction"]["faction_id"] !== 0 ) {
-		faction = '\n' + info["faction"]["position"] + ' at ' + '[' + info["faction"]["faction_name"] + ' [' + info["faction"]["faction_id"] + ']](' + general.make_link("faction_profile", id=info["faction"]["faction_id"]) + ')' + ' - ' + info["faction"]["days_in_faction"] + ' days'
+		faction = '\n' + info["faction"]["position"] + ' at ' + '[' + info["faction"]["faction_name"] + ' [' + info["faction"]["faction_id"] + ']](' + General_functions.make_link("faction_profile", id=info["faction"]["faction_id"]) + ')' + ' - ' + info["faction"]["days_in_faction"] + ' days'
 	}
 	field2 += faction
 	let job = '\n**Job**: None'
 	if ( info["job"]["company_id"] !== 0 ) {
-		job = '\n' + info["job"]["position"] + ' at ' + '[' + info["job"]["company_name"] + ' [' + info["job"]["company_id"] + ']](' + general.make_link("company_profile", id=info["job"]["company_id"]) + ')'
+		job = '\n' + info["job"]["position"] + ' at ' + '[' + info["job"]["company_name"] + ' [' + info["job"]["company_id"] + ']](' + General_functions.make_link("company_profile", id=info["job"]["company_id"]) + ')'
 	}
 	field2 += job
 
 	fields.push( { name: 'Info', value: field2, inline: true } )
 	
-	let links = general.make_link("attack", info["player_id"], formnat="Attack") + ', ' + general.make_link("message", info["player_id"], formnat="Message") + ', ' + general.make_link("send_money", info["player_id"], formnat="Send Money") + ', ' + general.make_link("trade", info["player_id"], formnat="Trade") + ', ' + general.make_link("player_bazaar", info["player_id"], formnat="Bazaar") + ', ' + general.make_link("place_bounty", info["player_id"], formnat="Bounty") + ', ' + general.make_link("add_friend", info["player_id"], formnat="Add Friend") + ', ' + general.make_link("add_enemy", info["player_id"], formnat="Add Enemy") + ', ' + general.make_link("display_case", info["player_id"], formnat="Display") + ', ' + general.make_link("personal_stats", info["player_id"], formnat="Stats")
+	let links = General_functions.make_link("attack", info["player_id"], format="Attack") + ', ' + General_functions.make_link("message", info["player_id"], format="Message") + ', ' +General_functions.make_link("send_money", info["player_id"], format="Send Money") + ', ' + General_functions.make_link("trade", info["player_id"], format="Trade") + ', ' + General_functions.make_link("player_bazaar", info["player_id"], format="Bazaar") + ', ' + General_functions.make_link("place_bounty", info["player_id"], format="Bounty") + ', ' + General_functions.make_link("add_friend", info["player_id"], format="Add Friend") + ', ' + General_functions.make_link("add_enemy", info["player_id"], format="Add Enemy") + ', ' + General_functions.make_link("display_case", info["player_id"], format="Display") + ', ' + General_functions.make_link("personal_stats", info["player_id"], format="Stats")
 	fields.push( { name: 'Info', value: links, inline: false } )
 
 	const embed = new MessageEmbed()
 		.setColor('#0099ff')
 		.setTitle(info["name"] + " [" + info["player_id"] + "]")
-		.setURL( general.make_link("player_profile", info["player_id"]) )
+		.setURL( General_functions.make_link("player_profile", info["player_id"]) )
 		//.setAuthor('Some name', 'https://i.imgur.com/AfFp7pu.png', 'https://discord.js.org')
 		.setDescription(gender + " " + info["rank"] )
 		//.setThumbnail('https://i.imgur.com/AfFp7pu.png')
@@ -86,18 +86,18 @@ async function player_profile(interaction, id, info=false) {
 	const row1 = new MessageActionRow()
 		.addComponents(
 			new MessageButton()
-				.setURL(general.make_link("attack", info["player_id"]))
+				.setURL(General_functions.make_link("attack", info["player_id"]))
 				.setLabel('Attack')
 				.setStyle('LINK')
 		)
 
-	let to_reply = await embeds.check_reply({ embeds: [embed], components: [] }, interaction)
+	let to_reply = await Embed_functions.check_reply({ embeds: [embed], components: [] }, interaction)
 
 	return to_reply
 }
 
-exports.player_profile = player_profile;
 
+exports.player_profile = player_profile;
 /*
 {
 	"rank": "Professional Trader",

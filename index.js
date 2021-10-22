@@ -1,15 +1,17 @@
 const host = require('./host.js')
 host.host()
 
+const util = require('util');
+
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const fs = require('fs');
-const { Client, Collection, Intents, MessageActionRow, MessageButton, MessageEmbed } = require('discord.js');
+const { Client, Collection, Intents, MessageActionRow, MessageButton, MessageEmbed, MessageAttachment } = require('discord.js');
 const { clientId, guildId } = require('./config.json');
 const token = process.env['token']
 
 const {Database} = require("./database.js")
-const general = require('./general.js')
+const {General_functions} = require("./helper_functions/general.js")
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS] })
 
@@ -24,7 +26,6 @@ for (const file of eventFiles) {
 	}
 }
 
-
 client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
@@ -37,8 +38,10 @@ client.on('interactionCreate', async interaction => {
 	} catch (error) {
 		console.error(error);
 		interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-		let chan = await general.get_channel("899743106482704434")
-		chan.send( error + "          a" )
+
+		let chan = await General_functions.get_channel("899743106482704434")
+		attachment = new MessageAttachment(Buffer.from(util.inspect(interaction), 'utf-8'), 'myfile.txt');
+		chan.send( {content:"error - " + error, files:[attachment]} )
 	}
 });
 

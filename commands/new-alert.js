@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
-const general = require('../general.js')
 
-const new_alert_command = require('../alerts/new_alert_command')
+const {Alerts_command_handler} = require('../alerts/command_handlers')
 
 const the_command = new SlashCommandBuilder().setName('new-alert').setDescription('Sets new alert.');
 
@@ -47,7 +46,7 @@ the_command.addSubcommandGroup((group) =>
 //general.add_stock_options(the_command.options[0].options[0].options[0])
 
 async function execute(interaction) {
-	new_alert_command.new_alert_command(interaction)
+	Alerts_command_handler.command_handler(interaction)
 }
 
 module.exports = {

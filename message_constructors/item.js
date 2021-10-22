@@ -1,21 +1,20 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
-const general = require('../general.js')
-const error = require('./error.js')
+const {General_functions} = require("../helper_functions/general.js")
 
-const components = require('../helper_functions/components.js')
-const responses = require('../responses')
-const torn = require('../torn')
+
+const {Components_functions} = require('../helper_functions/components.js')
+const {Message_constructors} = require('../message_constructors')
 
 async function item(interaction, item_id, info = false) {
 	if (info === false) {
-		url = general.make_url( "torn", id="", selections=["items"] )
-		info = await general.get_data_from_api( url, user_id=interaction.user.id, private=false )
+		url = General_functions.make_url( "torn", id="", selections=["items"] )
+		info = await General_functions.get_data_from_api( url, user_id=interaction.user.id, private=false )
 	}
 
 
 	if ( info["error"] !== undefined ) {
-		return await error.error(info["error"])
+		return await Message_constructors.error(info["error"])
 	}
 
 	let fields = []
@@ -25,15 +24,18 @@ async function item(interaction, item_id, info = false) {
 	}
 	let item = info[item_id]
 
+	if (item === undefined) {
+		return await Message_constructors.error("Item with such ID does not exist!")
+	}
 	let field1 = '\n**Effect: **' + item["effect"]
 	field1 += '\n**Requirement: **' + item["requirement"]
 	field1 += '\n**Type: **' + item["type"]
 	if (item["weapon_type"] !== null) {
 		field1 += '\n**Weapon Type: **' + item["weapon_type"]
 	}
-	field1 += '\n**Buy, Sell Price: **' + general.format_number(item["buy_price"]) + ", " + general.format_number(item["sell_price"])
-	field1 += '\n**Market Value: **$' + general.format_number(item["market_value"])
-	field1 += '\n**Circulation: **' + general.format_number(item["circulation"])
+	field1 += '\n**Buy, Sell Price: **' + General_functions.format_number(item["buy_price"]) + ", " + General_functions.format_number(item["sell_price"])
+	field1 += '\n**Market Value: **$' + General_functions.format_number(item["market_value"])
+	field1 += '\n**Circulation: **' + General_functions.format_number(item["circulation"])
 	fields.push( { name: 'Info', value: field1, inline: true } )
 
 	if (item["coverage"] !== undefined) {
@@ -54,16 +56,16 @@ async function item(interaction, item_id, info = false) {
 		.setThumbnail(item["image"])
 
 	async function market() {
-		let market_response = await responses.item_market(interaction, item_id)
+		let market_response = await Message_constructors.item_market(interaction, item_id)
 		await interaction.editReply( market_response )
 	}
 	async function bazaar() {
-		let bazaar_response = await responses.item_bazaar(interaction, item_id)
+		let bazaar_response = await Message_constructors.item_bazaar(interaction, item_id)
 		await interaction.editReply( bazaar_response )
 	}
 
-	let market_button = await components.button(interaction = interaction, button_id = "market", button_label = "Market", button_style="PRIMARY", func = market)
-	let bazaar_button = await components.button(interaction = interaction, button_id = "bazaar", button_label = "Bazaar", button_style="PRIMARY", func = bazaar)
+	let market_button = await Components_functions.button(interaction = interaction, button_id = "market", button_label = "Market", button_style="PRIMARY", func = market)
+	let bazaar_button = await Components_functions.button(interaction = interaction, button_id = "bazaar", button_label = "Bazaar", button_style="PRIMARY", func = bazaar)
 
 	const row = new MessageActionRow()
 			.addComponents(market_button)
@@ -72,8 +74,8 @@ async function item(interaction, item_id, info = false) {
 	return { embeds: [embed], components: [row] }
 }
 
-exports.item = item;
 
+exports.item = item;
 /*
 "681": {
 		"name": "EOD Apron",

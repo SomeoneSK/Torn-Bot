@@ -1,8 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
-const general = require('../general.js')
 
-const responses = require('../responses')
+const {Message_constructors} = require('../message_constructors')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,6 +15,6 @@ module.exports = {
 	async execute(interaction) {
 		let id = interaction.options.getString('faction_id');
 
-		return await interaction.reply( await responses.faction_profile(interaction = interaction, id=id) )
+		return await interaction.reply( await Message_constructors.faction_profile(interaction = interaction, id=id) )
 	},
 };

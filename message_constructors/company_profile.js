@@ -1,13 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 const {Database} = require("../database.js")
-const general = require('../general.js')
-const error = require('./error.js')
+const {General_functions} = require("../helper_functions/general.js")
 
-const {CompanyFunctions} = require("../helper_functions/company.js")
-const components = require('../helper_functions/components.js')
-const responses = require('../responses')
-const torn = require('../torn')
+const {Company_functions} = require("../helper_functions/company.js")
+const {Components_functions} = require('../helper_functions/components.js')
+const {Message_constructors} = require('../message_constructors')
+const {Torn_data} = require('../torn')
 
 async function company_profile(interaction, id, info = false) {
 	if ( info === false ) {
@@ -17,17 +16,17 @@ async function company_profile(interaction, id, info = false) {
 			if ( !Object.keys(data["players"]).includes(interaction.user.id.toString()) || data["players"][ interaction.user.id.toString() ]["torn_api_key"] === "") {
 				return await error.error( "Set your api with /setapi or use ID in this command!" )
 			}
-			url = general.make_url( "company", id="", selections=[""] )
+			url = General_functions.make_url( "company", id="", selections=[""] )
 		} else {
-			url = general.make_url( "company", id=id, selections=[""] )
+			url = General_functions.make_url( "company", id=id, selections=[""] )
 		}
 
-		info = await general.get_data_from_api( url, user_id=interaction.user.id, private=false )
+		info = await General_functions.get_data_from_api( url, user_id=interaction.user.id, private=false )
 	}
 
 
 	if ( info["error"] !== undefined ) {
-		return await error.error(info["error"])
+		return await Message_constructors.error(info["error"])
 	}
 
 	let fields = []
@@ -36,29 +35,29 @@ async function company_profile(interaction, id, info = false) {
 		info = info["company"]
 	}
 
-	let employees_info = await CompanyFunctions.employees_info(info)
-	let field1 = '**' + info["rating"] + "⭐ " + torn.companies[info["company_type"]]["name"] + '**'
+	let employees_info = await Company_functions.employees_info(info)
+	let field1 = '**' + info["rating"] + "⭐ " + Torn_data.companies[info["company_type"]]["name"] + '**'
 	field1 += '\n**Director: **' +employees_info["director_name"] + " [" + info["director"] + "]"
-	field1 += '\n**Age: **' + general.format_number(info["days_old"]) + " days"
+	field1 += '\n**Age: **' + General_functions.format_number(info["days_old"]) + " days"
 	field1 += '\n**Employees: **' + info["employees_hired"] + "/" + info["employees_capacity"]
-	field1 += '\n**Daily, Weekly Income: **' + general.format_number(info["daily_income"]) + ", " + general.format_number(info["weekly_income"])
-	field1 += '\n**Daily, Weekly Customers: **' + general.format_number(info["daily_customers"]) + ", " + general.format_number(info["weekly_customers"])
+	field1 += '\n**Daily, Weekly Income: **' + General_functions.format_number(info["daily_income"]) + ", " + General_functions.format_number(info["weekly_income"])
+	field1 += '\n**Daily, Weekly Customers: **' + General_functions.format_number(info["daily_customers"]) + ", " + General_functions.format_number(info["weekly_customers"])
 	fields.push( { name: 'Info', value: field1, inline: true } )
 
 	const embed = new MessageEmbed()
 		.setColor('#0099ff')
 		.setTitle(info["name"] + " [" + info["ID"] + "]")
-		.setURL( general.make_link("company_profile", info["ID"]) )
+		.setURL( General_functions.make_link("company_profile", info["ID"]) )
 		.addFields(fields)
 		.setTimestamp()
 		.setFooter('Page 1/1', '');
 
 	async function employees() {
-		let members = await responses.company_employees(interaction, info)
+		let members = await Message_constructors.company_employees(interaction, info)
 		await interaction.editReply( members )
 	}
 
-	let members_button = await components.button(interaction = interaction, button_id = "members", button_label = "Members", button_style="PRIMARY", func = employees)
+	let members_button = await Components_functions.button(interaction = interaction, button_id = "members", button_label = "Members", button_style="PRIMARY", func = employees)
 
 	const row = new MessageActionRow()
 			.addComponents(members_button)

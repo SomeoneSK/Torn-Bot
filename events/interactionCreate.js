@@ -1,4 +1,4 @@
-const general = require('../general.js')
+const {General_functions} = require("../helper_functions/general.js")
 
 module.exports = {
 	name: 'interactionCreate',
@@ -6,7 +6,7 @@ module.exports = {
 		if (!interaction.isCommand() ) {
 			return
 		}
-		let chan = await general.get_channel("899734106290671636")
+		let chan = await General_functions.get_channel("899734106290671636")
 		let channel = "dm"
 		if ( interaction.channel !== null ) {
 			channel = interaction.channel.toString()

@@ -1,11 +1,14 @@
 const {Database} = require("../../database.js")
-const general = require('../../general.js')
 
-const stocks = require('./stocks.js')
+const {Stocks_alerts_checks} = require('./stocks.js')
 
-async function starts_checks() {
+async function start_checks() {
 	//setInterval(stocks, 1000*60)
-	await stocks.stocks()
+	await Stocks_alerts_checks.stocks()
 }
 
-exports.starts_checks = starts_checks;
+const Alerts_checks = {
+	start_checks: start_checks,
+}
+
+exports.Alerts_checks = Alerts_checks;

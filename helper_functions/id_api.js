@@ -58,9 +58,9 @@ async function share_users_key(user_id, share=false) {
 	return "Your API key is now no longer shared!"
 }
 
-const IdApiFunctions = {
+const Id_api_functions = {
 	set_users_key: set_users_key,
 	share_users_key: share_users_key,
 }
 
-exports.IdApiFunctions = IdApiFunctions;
+exports.Id_api_functions = Id_api_functions;

@@ -1,6 +1,13 @@
+let Alerts_factories = {
+
+}
+
 require('fs').readdirSync(__dirname + '/').forEach(function(file) {
   if (file.match(/\.js$/) !== null && file !== 'index.js') {
     var name = file.replace('.js', '');
-    exports[name] = require('./' + file)[name];
+    //exports[name] = require('./' + file)[name];
+	Alerts_factories[name] = require('./' + file)[name]
   }
 });
+
+exports.Alerts_factories = Alerts_factories;

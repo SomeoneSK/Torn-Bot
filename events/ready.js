@@ -1,7 +1,7 @@
 const {Database} = require("../database.js")
-const general = require('../general.js')
+const {General_functions} = require("../helper_functions/general.js")
 
-const checks = require('../alerts/checks')
+const {Alerts_checks} = require('../alerts/checks')
 
 module.exports = {
 	name: 'ready',
@@ -16,14 +16,14 @@ module.exports = {
 		for (let i of names) {
 			emojis[i] = guild.emojis.cache.find(emoji => emoji.name === i).toString();
 		}
-		await general.set_emojis(emojis)
+		await General_functions.set_emojis(emojis)
 
-		general.makeClient(client)
+		General_functions.makeClient(client)
 
-		await checks.starts_checks()
+		await Alerts_checks.start_checks()
 
 		async function send_msg() {
-			let chan = await general.get_channel("899732115384594442")
+			let chan = await General_functions.get_channel("899732115384594442")
 			let now = new Date()
 			chan.send( now.toString() )
 		}

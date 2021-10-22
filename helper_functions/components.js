@@ -1,8 +1,8 @@
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
-const general = require('../general.js')
+const {General_functions} = require("../helper_functions/general.js")
 
 async function button(interaction, button_id, button_label, button_style="PRIMARY", func) {
-	let random = general.make_random_str(10)
+	let random = General_functions.make_random_str(10)
 	let the_button = new MessageButton()
 		.setCustomId(button_id + random)
 		.setLabel(button_label)
@@ -26,7 +26,7 @@ async function button(interaction, button_id, button_label, button_style="PRIMAR
 }
 
 async function select_menu(interaction, custom_id, placeholder, options = [], func, min=1, max=1) {
-	let random = general.make_random_str(10)
+	let random = General_functions.make_random_str(10)
 
 	for (let option of options) {
 		if (option["value"] === undefined) {
@@ -60,5 +60,9 @@ async function select_menu(interaction, custom_id, placeholder, options = [], fu
 }
 
 
-exports.button = button;
-exports.select_menu = select_menu;
+const Components_functions = {
+	button: button,
+	select_menu: select_menu,
+}
+
+exports.Components_functions = Components_functions;
