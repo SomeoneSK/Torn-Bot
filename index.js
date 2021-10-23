@@ -46,14 +46,13 @@ client.on('interactionCreate', async interaction => {
 });
 
 
+const {Commands} = require("./commands")
 client.commands = new Collection();
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 const commands = [];
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	client.commands.set(command.data.name, command);
-	commands.push(command.data.toJSON());
+for (const file of Object.keys(Commands)) {
+	client.commands.set(Commands[file].data.name, Commands[file]);
+	commands.push(Commands[file].data.toJSON());
 }
 
 const rest = new REST({ version: '9' }).setToken(token);

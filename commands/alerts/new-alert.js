@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 
-const {Alerts_command_handler} = require('../alerts/command_handlers')
+const {Alerts_command_handler} = require('../../alerts/command_handlers')
 
 const the_command = new SlashCommandBuilder().setName('new-alert').setDescription('Sets new alert.');
 

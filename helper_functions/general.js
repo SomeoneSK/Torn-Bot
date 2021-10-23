@@ -1,4 +1,6 @@
 const axios = require('axios');
+const fs=require('fs');
+
 const {Database} = require(".././database.js")
 
 const {Id_api_functions} = require("./id_api.js")
@@ -15,6 +17,10 @@ function get_user( user_id=false ) {
 
 async function get_shared_api_key() {
 	data = Database.getData()
+
+	if (data["general"]["shared_apis"]["apis"].length === 0) {
+		return ""
+	}
 	data["general"]["shared_apis"]["index"] += 1
 	if ( data["general"]["shared_apis"]["index"] > data["general"]["shared_apis"]["apis"].length -1 ) {
 		data["general"]["shared_apis"]["index"] = 0
@@ -56,11 +62,14 @@ async function get_data_from_api_shared(url) {
 
 			data = Database.getData()
 			key = await get_shared_api_key()
+			if (key === "") {
+				return {"error":"No shared API keys!"}
+			}
 			let index = data["general"]["shared_apis"]["index"]
 			if ( [2, 10].includes(result["error"]["code"]) ) {
 				await Id_api_functions.share_users_key(data["general"]["shared_apis"]["apis"][index_used]["discord_id"], share=false)
 			}
-			if(index === start_index) {
+			if (index === start_index) {
 				return {"error":"All shared APIs failed!"}
 			}
 			index_used = index
@@ -183,6 +192,13 @@ function delete_from_list_by_key(list, key, value) {
 	return new_list
 }
 
+function delete_from_list(list, remove) {
+	let new_list = list.filter(function(item) {
+    	return item !== remove
+})
+	return new_list
+}
+
 let client = undefined
 function getCient() {
   return client;
@@ -204,6 +220,20 @@ async function get_channel(id) {
 	return await client.channels.cache.get(id)
 }
 
+function get_files_in_folder(dir, files_){
+    files_ = files_ || [];
+    var files = fs.readdirSync(dir);
+    for (var i in files){
+        var name = dir + '/' + files[i];
+        if (fs.statSync(name).isDirectory()){
+            get_files_in_folder(name, files_);
+        } else {
+            files_.push(name);
+        }
+    }
+    return files_;
+}
+
 const General_functions = {
 	getCient: getCient,
 	makeClient: makeClient,
@@ -223,6 +253,8 @@ const General_functions = {
 	sleep: sleep,
 	add_stock_options: add_stock_options,
 	delete_from_list_by_key: delete_from_list_by_key,
+	delete_from_list: delete_from_list,
+	get_files_in_folder: get_files_in_folder
 }
 
 exports.General_functions = General_functions;
