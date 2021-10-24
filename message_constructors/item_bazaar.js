@@ -19,7 +19,6 @@ async function item_bazaar(interaction, item_id, info = false) {
 		return await Message_constructors.error(info["error"])
 	}
 
-	let fields = []
 
 	if (Object.keys(info).includes("bazaar")) {
 		info = info["bazaar"]
@@ -28,17 +27,12 @@ async function item_bazaar(interaction, item_id, info = false) {
 	let item = Torn_data.items[item_id]
 
 
-	let field1 = ''
-	let index = 0
+	let fields = []
 	if (info === null) {
 		fields.push( { name: 'Item Bazaar', value: "There are no listings for this item." } )
 	} else {
+		let field1 = ""
 		for (let listing of info) {
-			if (index % 5 === 0 && index !== 0) {
-				fields.push( { name: 'Item Bazaar', value: field1, inline: true } )
-				field1 = ""
-			}
-			index += 1
 			field1 += General_functions.format_number(listing["quantity"]) + "x $" + General_functions.format_number(listing["cost"]) + "\n"
 		}
 		fields.push( { name: 'Item Bazaar', value: field1, inline: true } )
@@ -70,7 +64,7 @@ async function item_bazaar(interaction, item_id, info = false) {
 			.addComponents(item_button)
 			.addComponents(market_button)
 
-	let to_reply = await Embed_functions.check_reply({ embeds: [embed], components: [row] }, interaction, fields = 6)
+	let to_reply = await Embed_functions.check_reply({ embeds: [embed], components: [row] }, interaction, fields_limit = 3, new_lines_limit=14)
 
 	return to_reply
 }

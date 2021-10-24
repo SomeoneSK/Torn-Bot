@@ -22,12 +22,14 @@ module.exports = {
 
 		await Alerts_checks.start_checks()
 
+		let chan = await General_functions.get_channel(process.env['status_channel'])
 		async function send_msg() {
-			let chan = await General_functions.get_channel("899732115384594442")
 			let now = new Date()
 			chan.send( now.toString() )
 		}
-		setInterval(send_msg, 1000*60*15)
+		if (chan !== undefined) {
+			setInterval(send_msg, 1000*60*15)
+		}
 	},
 };
 

@@ -6,7 +6,8 @@ module.exports = {
 		if (!interaction.isCommand() ) {
 			return
 		}
-		let chan = await General_functions.get_channel("899734106290671636")
+		let chan = await General_functions.get_channel(process.env['commands_channel'])
+		if (chan === undefined) {return}
 		let channel = "dm"
 		if ( interaction.channel !== null ) {
 			channel = interaction.channel.toString()

@@ -20,6 +20,6 @@ module.exports = {
 		
 		await Id_api_functions.set_users_key( interaction_from.id, key )
 
-		return await interaction.reply( {content: to_send} )
+		return await interaction.reply( {content: to_send, ephemeral :true} )
 	},
 };

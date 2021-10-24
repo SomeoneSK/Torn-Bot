@@ -43,10 +43,22 @@ async function delete_alert(code) {
 	a = await Database.setData( data, {"alerts": [ operation1 ] } )
 }
 
+async function get_users_alerts(id) {
+	let data = Database.getData()
+	let alerts = []
+	for (let alert of data["alerts"]) {
+		if (alert["owner"]["type"] === "user" && alert["owner"]["id"] === id) {
+			alerts.push(alert)
+		}
+	}
+	return alerts
+}
+
 const Alerts_general = {
 	add_alert: add_alert,
 	delete_alert: delete_alert,
 	new_code: new_code,
+	get_users_alerts: get_users_alerts,
 }
 
 exports.Alerts_general = Alerts_general;

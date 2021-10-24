@@ -14,7 +14,7 @@ async function faction_profile(interaction, id, info = false) {
 		let url = ""
 		if ( id === null ) {
 			if ( !Object.keys(data["players"]).includes(interaction.user.id.toString()) || data["players"][ interaction.user.id.toString() ]["torn_api_key"] === "") {
-				return await error.error( "Set your api with /setapi or use ID in this command!" )
+				return await Message_constructors.error( "Set your api with /setapi or use ID in this command!" )
 			}
 			url = General_functions.make_url( "faction", id="", selections=[""] )
 		} else {

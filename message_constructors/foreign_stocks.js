@@ -21,6 +21,7 @@ async function foreign_stocks(interaction, country_name = null, info=false) {
 	if (Object.keys(info).includes("stocks")) {
 		info = info["stocks"]
 	}
+
 	if (country_name === null) {country_name = "Mexico"}
 
 	let country_code = Torn_data.country_codes[country_name]

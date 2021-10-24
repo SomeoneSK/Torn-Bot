@@ -50,6 +50,12 @@ async function stock_reach(stock, higher_or_lower, property, value, owner, to_pi
 		}
 		return {done:false}
 	}
+
+	obj.to_string = async function () {
+		let chan = await General_functions.get_channel(this.channel) || "**deleted channel**"
+		return this.alert.stock + "'s " + this.alert.property.replace("_"," ") + " will be " + this.alert.higher_or_lower + " than " + General_functions.format_number(this.alert.value) + " in " + chan.toString()
+	}
+	
 	return {"alert":obj, "alert_for_db": obj_db}
 }
 

@@ -17,14 +17,42 @@ async function limit_buttons(the_reply, interaction) {
 	return the_reply
 }
 
-async function check_reply(the_reply, interaction, fields_limit = 25) {
-	the_reply = await limit_embed(the_reply, interaction, fields_limit)
+async function check_reply(the_reply, interaction, fields_limit = 25, new_lines_limit=99999999) {
+	the_reply = await limit_embed(the_reply, interaction, fields_limit, new_lines_limit)
 	the_reply = await limit_buttons(the_reply, interaction)
 	return the_reply
 }
 
-async function limit_embed(returning, interaction, fields_limit = 25) {
+function get_nth_position_of_substring(string, subString, index) {
+  return string.split(subString, index).join(subString).length;
+}
+
+function replace_elem_with_array(array, elem, new_array) {
+	let the_index = array.indexOf(elem)
+	let to_return = array.slice(0, the_index)
+	to_return = to_return.concat(  new_array )
+	to_return = to_return.concat(  array.slice(the_index+1) )
+	return to_return
+}
+
+async function limit_embed(returning, interaction, fields_limit, new_lines_limit ) {
 	let embed = General_functions.copy(returning.embeds[0] )
+
+	for (let field2 of embed.fields) {
+		let field = General_functions.copy(field2)
+		let count = (field.value.match(/\n/g) || []).length
+		let fields = [field]
+		while ( count > new_lines_limit ) {
+			let pos_of_nth = get_nth_position_of_substring(fields[fields.length-1].value, "\n", new_lines_limit+1)
+			let new_last = {name:fields[fields.length-1].name, value: fields[fields.length-1].value.substring(pos_of_nth+1), inline:fields[fields.length-1].inline }
+			fields[fields.length-1].value = fields[fields.length-1].value.substring(0,pos_of_nth)
+			if (new_last.value !== "") {
+				fields.push(new_last)
+			}
+			count = (fields[fields.length-1].value.match(/\n/g) || []).length
+		}
+		embed.fields = replace_elem_with_array(embed.fields, embed.fields[embed.fields.length-1], fields)
+	}
 
 	for (let field of embed.fields) {
 		if ( field.value.length > 1024 ) {
@@ -53,14 +81,10 @@ async function limit_embed(returning, interaction, fields_limit = 25) {
 				page += 1
 			}
 
-			let the_index = embed.fields.indexOf(field)
-			let new_fields = embed.fields.slice(0, the_index)
-			new_fields = new_fields.concat(  the_fields )
-			new_fields = new_fields.concat(  embed.fields.slice(the_index+1) )
-			embed.fields = new_fields
+			embed.fields = replace_elem_with_array(embed.fields, field, the_fields)
 		}
 	}
-	//console.log(embed.fields)
+
 	let the_messages = [ [] ]
 	let sum_of_other =  embed.title.length + embed.description.length + embed.footer.text.length 
 	if (embed.author !== null) { sum_of_other += embed.author.name.length }

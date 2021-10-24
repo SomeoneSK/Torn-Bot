@@ -39,7 +39,8 @@ client.on('interactionCreate', async interaction => {
 		console.error(error);
 		interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 
-		let chan = await General_functions.get_channel("899743106482704434")
+		let chan = await General_functions.get_channel(process.env['error_channel'])
+		if (chan === undefined) {return}
 		attachment = new MessageAttachment(Buffer.from(util.inspect(interaction), 'utf-8'), 'myfile.txt');
 		chan.send( {content:"error - " + error, files:[attachment]} )
 	}

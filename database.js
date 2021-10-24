@@ -12,11 +12,14 @@ var data = {
 }
 
 const { MongoClient } = require('mongodb');
-const db_string = process.env['db_string']
-const uri = db_string
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const uri = process.env['db_string']
+let client = false
+if (uri !== undefined ) {
+	client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+}
 
 async function makeData(){
+	if (client === false ) {return}
 	await client.connect();
 	
 	const players = client.db("database0").collection("players");
@@ -35,7 +38,6 @@ async function makeData(){
 		data["alerts"].push( alert )
 	} )
 
-	console.log(data)
 	client.close();
 }
 
@@ -45,12 +47,13 @@ function getData() {
 
 async function setData(new_data, update) {
 	data = new_data;
+	if (client === false) {return "done"}
 	await client.connect();
 	for (let col_name of Object.keys(update)) {
 		const col = client.db("database0").collection(col_name);
 		await col.bulkWrite( update[col_name] )
 	}
-	client.close();
+	await client.close();
 	return "done"
 };
 
