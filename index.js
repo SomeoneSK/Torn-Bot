@@ -26,27 +26,6 @@ for (const file of eventFiles) {
 	}
 }
 
-client.on('interactionCreate', async interaction => {
-	if (!interaction.isCommand()) return;
-
-	const command = client.commands.get(interaction.commandName);
-
-	if (!command) return;
-
-	try {
-		await command.execute(interaction);
-	} catch (error) {
-		console.error(error);
-		interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
-
-		let chan = await General_functions.get_channel(process.env['error_channel'])
-		if (chan === undefined) {return}
-		attachment = new MessageAttachment(Buffer.from(util.inspect(interaction), 'utf-8'), 'myfile.txt');
-		chan.send( {content:"error - " + error, files:[attachment]} )
-	}
-});
-
-
 const {Commands} = require("./commands")
 client.commands = new Collection();
 

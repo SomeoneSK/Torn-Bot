@@ -10,10 +10,15 @@ This bot is **open-source**. Feel free to edit the code as you want. Pull reques
 If you have any **suggestions**, **bug reports** or **improvement ideas**, let us know in our discord, create an issue on Github or message us on Torn.
 
 <br>**Run this bot**  
-To run this bot, you will need to create .env file and declare these variables:
-- token - discord bot token (google how to get it)  
+To run this bot, you will need declare these variables in config.json and new .enf file:
 
-Optional:
+.env:
+- token - discord bot token (google how to get it) 
+- db_string (optional) - mongodb atlas connection string 
+
+config.json:
+- client_id - bot's ID
+- guild_id - test channel's ID
 - commands_channel - channel ID, where the bot will log commands used
 - errors_channel - channel ID, where the bot will log errors
 - status_channel - channel ID, where the bot will send message every 15 minutes

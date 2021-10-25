@@ -2,6 +2,7 @@ const {Database} = require("../database.js")
 const {General_functions} = require("../helper_functions/general.js")
 
 const {Alerts_checks} = require('../alerts/checks')
+const { status_channel } = require('../config.json');
 
 module.exports = {
 	name: 'ready',
@@ -22,7 +23,7 @@ module.exports = {
 
 		await Alerts_checks.start_checks()
 
-		let chan = await General_functions.get_channel(process.env['status_channel'])
+		let chan = await General_functions.get_channel(status_channel)
 		async function send_msg() {
 			let now = new Date()
 			chan.send( now.toString() )
