@@ -1,8 +1,6 @@
 const host = require('./host.js')
 host.host()
 
-const util = require('util');
-
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const fs = require('fs');

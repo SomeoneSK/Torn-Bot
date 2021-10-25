@@ -38,6 +38,12 @@ function replace_elem_with_array(array, elem, new_array) {
 async function limit_embed(returning, interaction, fields_limit, new_lines_limit ) {
 	let embed = General_functions.copy(returning.embeds[0] )
 
+	for (let field of embed.fields) {
+		if (field.value === "") {
+			field.value = "Empty field!"
+		}
+	}
+
 	for (let field2 of embed.fields) {
 		let field = General_functions.copy(field2)
 		let count = (field.value.match(/\n/g) || []).length
@@ -58,7 +64,6 @@ async function limit_embed(returning, interaction, fields_limit, new_lines_limit
 		if ( field.value.length > 1024 ) {
 			let the_fields = [field]
 			while ( the_fields[ 0 ].value.length > 1024 ) {
-				//await new Promise(r => setTimeout(r, 1000));
 				let more_than = (the_fields[0].value.length-1024)
 				let next_new_line = more_than + the_fields[0].value.substring(more_than).indexOf("\n")
 				if (next_new_line === -1 ) {
@@ -86,7 +91,9 @@ async function limit_embed(returning, interaction, fields_limit, new_lines_limit
 	}
 
 	let the_messages = [ [] ]
-	let sum_of_other =  embed.title.length + embed.description.length + embed.footer.text.length 
+	let desc = embed.description || ""
+	let footer_text = embed.footer.text || ""
+	let sum_of_other =  embed.title.length + desc.length + footer_text.length 
 	if (embed.author !== null) { sum_of_other += embed.author.name.length }
 
 	let sum_of_current_message = sum_of_other
@@ -138,7 +145,6 @@ async function limit_embed(returning, interaction, fields_limit, new_lines_limit
 
 	if ( buttons.length !== 0 ) {
 		if (returning.components !== undefined) {
-			// multiple rows
 			buttons = buttons.concat( returning.components[0].components )
 			returning.components[0].components = buttons
 		} else {
