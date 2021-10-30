@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
-const {Commands} = require("../commands")
 const {Embed_functions} = require('../helper_functions/embeds.js')
+const {Commands} = require("../commands")
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -25,5 +25,4 @@ module.exports = {
 		await interaction.reply( to_reply );
 	},
 }
-
 

@@ -11,7 +11,6 @@ async function foreign_stocks(interaction, country_name = null, info=false) {
 		info = await General_functions.http_request( 'https://yata.yt/api/v1/travel/export/')
 	}
 
-
 	if ( info["error"] !== undefined ) {
 		return await Message_constructors.error(info["error"])
 	}
@@ -64,7 +63,7 @@ async function foreign_stocks(interaction, country_name = null, info=false) {
 		await interaction.editReply(new_country)
 	}
 
-	let select = await Components_functions.select_menu(interaction, custom_id="country", placeholder="Country", options = options, select_country, min=1, max=1)
+	let select = await Components_functions.select_menu(interaction, custom_id="country", placeholder="Change Country", options = options, select_country, min=1, max=1)
 
 	const row = new MessageActionRow()
 			.addComponents(select)

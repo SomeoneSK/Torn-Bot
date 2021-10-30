@@ -25,9 +25,9 @@ async function stock_reach(stock, higher_or_lower, property, value, owner, to_pi
 		if (!Object.keys(stocks).includes("stocks") ) {
 			return {done:false}
 		}
-		let id = Torn_data.stocks[ this.alert.stock ]["id"]
+		let index = Torn_data.stocks[ this.alert.stock ]["index"]
 		
-		let difference = stocks["stocks"][id][this.alert.property] - this.alert.value
+		let difference = stocks["stocks"][index][this.alert.property] - this.alert.value
 		if ( this.alert.higher_or_lower === "lower"  ) {
 			difference *= -1
 		}
@@ -43,7 +43,7 @@ async function stock_reach(stock, higher_or_lower, property, value, owner, to_pi
 			}
 
 			if ( chan !== undefined && mention !== undefined ) {
-				chan.send(mention + ", **" + this.alert.stock + "**'s **" +  this.alert.property.replace("_", " ") + "** is now " + this.alert.higher_or_lower + " than " + this.alert.value + " - it's **" + stocks["stocks"][id][this.alert.property] + "** !")
+				chan.send(mention + ", **" + this.alert.stock + "**'s **" +  this.alert.property.replace("_", " ") + "** is now " + this.alert.higher_or_lower + " than " + this.alert.value + " - it's **" + stocks["stocks"][index][this.alert.property] + "** !")
 			}
 			Alerts_general.delete_alert(this.code)
 			return {done:true}

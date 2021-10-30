@@ -109,59 +109,84 @@ async function limit_embed(returning, interaction, fields_limit, new_lines_limit
 		}
 	}
 
-	embed.fields = the_messages[0]
-	returning.embeds = [ General_functions.copy(embed) ]
+	let pages = []
+	let page_num = 1
+	for(let page_embed of the_messages) {
+		let page = General_functions.copy(returning)
+		let copy_embed = General_functions.copy(embed)
+		copy_embed.fields = page_embed
+		copy_embed.footer.text = "Page " + page_num + "/" + the_messages.length
+		page.embeds = [ copy_embed ] 
+		pages.push( page )
+		page_num += 1
+	}
+	let to_return = await pagination(pages, interaction, 1)
+	return to_return
+}
 
-	let current = 0
+async function pagination( the_messages, interaction, default_page = 1 ) {
+
+	if (the_messages.length === 1) { 
+		return the_messages[0]
+	}
+
+	let current = default_page - 1
 	async function next_page() {
 		if (current !== the_messages.length-1) {
 			current += 1
 		}
-		returning.embeds[0].fields = the_messages[current]
-		returning.embeds[0].footer.text = "Page " + (current + 1) + "/" + the_messages.length
-		let next_page_button = await Components_functions.button(interaction = interaction, button_id = "next_page", button_label = "Next Page", button_style="SECONDARY", func = next_page)
-		returning.components[0].components[1] = next_page_button
-		await interaction.editReply( returning )
+		let new_msg = the_messages[current]
+		new_msg = await add_the_buttons(new_msg)
+		await interaction.editReply( new_msg )
 	}
 
 	async function previous_page() {
 		if (current !== 0) {
 			current -= 1
 		}
-		returning.embeds[0].fields = the_messages[current]
-		returning.embeds[0].footer.text = "Page " + (current + 1) + "/" + the_messages.length
-		let previous_page_button = await Components_functions.button(interaction = interaction, button_id = "previous_page", button_label = "Previous Page", button_style="SECONDARY", func = previous_page)
-		returning.components[0].components[0] = previous_page_button
-		await interaction.editReply( returning )
+		let new_msg = the_messages[current]
+		new_msg = await add_the_buttons(new_msg)
+		await interaction.editReply( new_msg )
 	}
 	
-	let buttons = []
-	if (the_messages.length > 1) {
+
+	async function add_the_buttons(message) {
+		let buttons = []
 		let next_page_button = await Components_functions.button(interaction = interaction, button_id = "next_page", button_label = "Next", button_style="SECONDARY", func = next_page)
 		let previous_page_button = await Components_functions.button(interaction = interaction, button_id = "previous_page", button_label = "Previous", button_style="SECONDARY", func = previous_page)
 		buttons.push(previous_page_button)
 		buttons.push(next_page_button)
-	}
 
-	if ( buttons.length !== 0 ) {
-		if (returning.components !== undefined) {
-			buttons = buttons.concat( returning.components[0].components )
-			returning.components[0].components = buttons
+
+		if (message.components !== undefined && message.components.length !== 0) {
+			let without_next_previous = []
+			for (let button of message.components[0].components) {
+				let button_id = button.custom_id || button.customId
+				console.log(button_id)
+				if ( !button_id.includes("next_page") && !button_id.includes("previous_page") ) {
+					without_next_previous.push(button)
+				}
+			}
+			message.components[0].components = without_next_previous
+			let msg_buttons = buttons.concat( message.components[0].components )
+			message.components[0].components = msg_buttons
 		} else {
 			const row = new MessageActionRow()
 				.addComponents(buttons[0])
 				.addComponents(buttons[1])
-			returning.components = [row]
+			message.components = [row]
 		}
+		return message
 	}
 
-	returning.embeds[0].footer.text = "Page 1/" + the_messages.length
-
-	return returning
+	let default_message = the_messages[default_page-1]
+	default_message = add_the_buttons(default_message)
+	return default_message
 }
 
 const Embed_functions = {
 	check_reply: check_reply,
+	pagination: pagination
 }
 
 exports.Embed_functions = Embed_functions;

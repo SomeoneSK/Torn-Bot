@@ -4,6 +4,8 @@ let Commands = {
 
 }
 
+exports.Commands = Commands;
+
 let files = General_functions.get_files_in_folder(__dirname)
 
 for (let file of files) {
@@ -15,4 +17,3 @@ for (let file of files) {
 for (let file of files) {
 	Commands[file.substring(file.indexOf("/") + 1,file.length - 3)] = require("./" + file)//[file.substring(file.indexOf("/") + 1,file.length - 3)]
 }
-exports.Commands = Commands;
