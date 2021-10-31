@@ -162,7 +162,6 @@ async function pagination( the_messages, interaction, default_page = 1 ) {
 			let without_next_previous = []
 			for (let button of message.components[0].components) {
 				let button_id = button.custom_id || button.customId
-				console.log(button_id)
 				if ( !button_id.includes("next_page") && !button_id.includes("previous_page") ) {
 					without_next_previous.push(button)
 				}
