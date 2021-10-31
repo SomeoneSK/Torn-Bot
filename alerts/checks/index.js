@@ -1,10 +1,12 @@
 const {Database} = require("../../database.js")
 
 const {Stocks_alerts_checks} = require('./stocks.js')
+const {General_functions} = require("../../helper_functions/general.js")
 
 async function start_checks() {
-	//setInterval(stocks, 1000*60)
-	await Stocks_alerts_checks.stocks()
+	if (General_functions.am_i_original() ) {
+		await Stocks_alerts_checks.stocks()
+	}
 }
 
 const Alerts_checks = {

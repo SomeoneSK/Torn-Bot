@@ -20,7 +20,8 @@ module.exports = {
 		await General_functions.set_emojis(emojis)
 
 		General_functions.makeClient(client)
-
+		
+		
 		await Alerts_checks.start_checks()
 
 		let chan = await General_functions.get_channel(status_channel)

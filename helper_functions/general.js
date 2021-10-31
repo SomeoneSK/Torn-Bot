@@ -165,6 +165,13 @@ function get_files_in_folder(dir, files_){
     return files_;
 }
 
+function am_i_original() {
+	if (client.user.id === "892034594700951593" || client.user.id === 892034594700951593) {
+		return true
+	}
+	return false
+}
+
 const General_functions = {
 	getClient: getClient,
 	makeClient: makeClient,
@@ -183,7 +190,8 @@ const General_functions = {
 	add_stock_options: add_stock_options,
 	delete_from_list_by_key: delete_from_list_by_key,
 	delete_from_list: delete_from_list,
-	get_files_in_folder: get_files_in_folder
+	get_files_in_folder: get_files_in_folder,
+	am_i_original: am_i_original
 }
 
 exports.General_functions = General_functions;

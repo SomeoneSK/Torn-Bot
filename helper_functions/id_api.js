@@ -179,7 +179,8 @@ let Id_api_functions = {
 	set_users_id: set_users_id,
 	get_shared_api_key: get_shared_api_key,
 	get_users_key: get_users_key,
-	get_data_from_api_shared: get_data_from_api_shared
+	get_data_from_api_shared: get_data_from_api_shared,
+	get_data_from_api: get_data_from_api
 }
 
 exports.Id_api_functions = Id_api_functions;
