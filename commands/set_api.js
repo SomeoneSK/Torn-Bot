@@ -5,7 +5,7 @@ const {Id_api_functions} = require("../helper_functions/id_api.js")
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('setapi')
+		.setName('set-api')
 		.setDescription('Sets API key')
 		.addStringOption(option =>
 		option.setName('key')
@@ -18,8 +18,12 @@ module.exports = {
 		if (key === null) { key = ""; to_send = "Unset your API!" }
 		let interaction_from = interaction.user
 		
-		await Id_api_functions.set_users_key( interaction_from.id, key )
+		let result = await Id_api_functions.set_users_key( interaction_from.id, interaction.guild.id, key )
 
+		if ( result["error"] !== undefined ) {
+			to_send = result["error"]
+		}
+		
 		return await interaction.reply( {content: to_send, ephemeral :true} )
 	},
 };

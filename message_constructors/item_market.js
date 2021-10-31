@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 const {General_functions} = require("../helper_functions/general.js")
-
+const {Id_api_functions} = require("../helper_functions/id_api.js")
 
 const {Components_functions} = require('../helper_functions/components.js')
 const {Message_constructors} = require('../message_constructors')
@@ -11,7 +11,7 @@ const {Embed_functions} = require('../helper_functions/embeds.js')
 async function item_market(interaction, item_id, info = false) {
 	if (info === false) {
 		url = General_functions.make_url( "market", id=item_id, selections=["itemmarket"] )
-		info = await General_functions.get_data_from_api( url, user_id=interaction.user.id, private=false )
+		info = await Id_api_functions.get_data_from_api( url, user_id=interaction.user.id, private=false )
 	}
 
 

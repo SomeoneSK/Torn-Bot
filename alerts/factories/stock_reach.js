@@ -33,7 +33,7 @@ async function stock_reach(stock, higher_or_lower, property, value, owner, to_pi
 		}
 		if ( difference >= 0  ) {
 
-			let client = General_functions.getCient()
+			let client = General_functions.getClient()
 
 			let chan = await General_functions.get_channel(this.channel)
 

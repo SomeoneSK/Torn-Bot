@@ -2,6 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
 const {Database} = require("../database.js")
 const {General_functions} = require("../helper_functions/general.js")
+const {Id_api_functions} = require("../helper_functions/id_api.js")
 
 const {Company_functions} = require("../helper_functions/company.js")
 const {Components_functions} = require('../helper_functions/components.js')
@@ -21,7 +22,7 @@ async function company_profile(interaction, id, info = false) {
 			url = General_functions.make_url( "company", id=id, selections=[""] )
 		}
 
-		info = await General_functions.get_data_from_api( url, user_id=interaction.user.id, private=false )
+		info = await Id_api_functions.get_data_from_api( url, user_id=interaction.user.id, private=false )
 	}
 
 

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const {Database} = require("../database.js")
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -10,7 +11,7 @@ module.exports = {
 				.setDescription('Info about a user')
 				.addUserOption(option => option.setName('target').setDescription('The user'))),
 	async execute(interaction) {
-		await interaction.reply('Gif!');
+		await interaction.reply('test!');
 	},
 }
 

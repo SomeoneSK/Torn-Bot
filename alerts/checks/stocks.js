@@ -1,12 +1,13 @@
 const {Database} = require("../../database.js")
 
 const {General_functions} = require("../../helper_functions/general.js")
+const {Id_api_functions} = require("../../helper_functions/id_api.js")
 
 async function stocks() {
 	let data = Database.getData()
 
 	let url = General_functions.make_url( "torn", id="", selections=["stocks"] )
-	info = await General_functions.get_data_from_api_shared( url )
+	info = await Id_api_functions.get_data_from_api_shared( url )
 
 	if ( info["error"] !== undefined ) {
 		console.log("Could not check stocks! - " + info["error"])
@@ -23,8 +24,6 @@ async function stocks() {
 	
 	setTimeout(stocks, 1000*60)
 }
-
-exports.stocks = stocks;
 
 const Stocks_alerts_checks = {
 	stocks: stocks,

@@ -5,7 +5,7 @@ const {Id_api_functions} = require("../helper_functions/id_api.js")
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('shareapi')
+		.setName('share-api')
 		.setDescription('Shares or unshares your API key'),
 
 	async execute(interaction) {

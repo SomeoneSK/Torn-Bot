@@ -2,8 +2,6 @@ const axios = require('axios');
 const fs=require('fs');
 
 const {Database} = require(".././database.js")
-
-const {Id_api_functions} = require("./id_api.js")
 const {Torn_data} = require('.././torn')
 
 
@@ -15,29 +13,6 @@ function get_user( user_id=false ) {
 	return undefined
 }
 
-async function get_shared_api_key() {
-	data = Database.getData()
-
-	if (data["general"]["shared_apis"]["apis"].length === 0) {
-		return ""
-	}
-	data["general"]["shared_apis"]["index"] += 1
-	if ( data["general"]["shared_apis"]["index"] > data["general"]["shared_apis"]["apis"].length -1 ) {
-		data["general"]["shared_apis"]["index"] = 0
-	}
-	await Database.setData(data, {})
-	let discord_id = data["general"]["shared_apis"]["apis"][ data["general"]["shared_apis"]["index"] ]["discord_id"]
-	return data["players"][ discord_id.toString() ]["torn_api_key"]
-}
-
-function get_users_key(user_id=false) {
-	doc = get_user( user_id=user_id )
-	if ( doc !== undefined ) {
-		return doc["torn_api_key"]
-	}
-	return ""
-}
-
 async function http_request(url) {
 	try {
 		const response = await axios.get(url);
@@ -47,50 +22,6 @@ async function http_request(url) {
 		return {"error":"Error while making http request!"}
 	}
 }
-
-async function get_data_from_api_shared(url) {
-	let data = Database.getData()
-	let key = await get_shared_api_key()
-	let start_index = data["general"]["shared_apis"]["index"]
-	let index_used = data["general"]["shared_apis"]["index"]
-	while (true) {
-		let result = await http_request(url + key)
-		if ( result["error"] !== undefined ) {
-			if ( ![2, 5, 10, 11, 12, 13, 14].includes(result["error"]["code"]) ) {
-				return result
-			}
-
-			data = Database.getData()
-			key = await get_shared_api_key()
-			if (key === "") {
-				return {"error":"No shared API keys!"}
-			}
-			let index = data["general"]["shared_apis"]["index"]
-			if ( [2, 10].includes(result["error"]["code"]) ) {
-				await Id_api_functions.share_users_key(data["general"]["shared_apis"]["apis"][index_used]["discord_id"], share=false)
-			}
-			if (index === start_index) {
-				return {"error":"All shared APIs failed!"}
-			}
-			index_used = index
-			continue
-		}
-		return result
-	}
-	return res
-}
-
-async function get_data_from_api( url, user_id=false, private=false ) {
-	key = get_users_key( user_id=user_id )
-	if ( key !== "" ) {
-		res = await http_request(url + key)
-		return res
-	}
-	if ( private === false ) {
-		return await get_data_from_api_shared(url)
-	}
-	return { "error": "You did not set your api!"}
-};
 
 function make_url( category, id="", selections=[], key="" ) {
 	let selection = ""
@@ -200,7 +131,7 @@ function delete_from_list(list, remove) {
 }
 
 let client = undefined
-function getCient() {
+function getClient() {
   return client;
 };
 async function makeClient(new_client){
@@ -235,17 +166,15 @@ function get_files_in_folder(dir, files_){
 }
 
 const General_functions = {
-	getCient: getCient,
+	getClient: getClient,
 	makeClient: makeClient,
 	mention_user: mention_user,
 	get_channel: get_channel,
+	get_user: get_user,
 	http_request: http_request,
-	get_data_from_api: get_data_from_api,
-	get_data_from_api_shared: get_data_from_api_shared,
 	make_url: make_url,
 	make_link: make_link,
 	format_number: format_number,
-	get_users_key: get_users_key,
 	make_random_str: make_random_str,
 	copy: copy,
 	set_emojis: set_emojis,

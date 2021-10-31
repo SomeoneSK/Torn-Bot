@@ -1,11 +1,11 @@
 
-async function get_users_company(interaction_from) {
+/*async function get_users_company(interaction_from) {
 	let id = data["players"][ interaction_from.id.toString() ]["torn_id"]
 
 	let url = general.make_url( "company", id=company_id, selections=["profile"] )
 	info = await general.get_data_from_api( url, user_id=interaction_from.id, private=false )
 }
-
+*/
 async function employees_info(company) {
 	let count = 0
 	let director = ""
@@ -19,7 +19,6 @@ async function employees_info(company) {
 }
 
 const Company_functions = {
-	get_users_company: get_users_company,
 	employees_info: employees_info,
 }
 
