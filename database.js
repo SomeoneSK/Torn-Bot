@@ -57,10 +57,15 @@ async function setData(new_data, update) {
 	return "done"
 };
 
+function user_to_db(user) {
+	return user
+}
+
 const Database = {
 	getData: getData,
 	setData: setData,
-	makeData: makeData
+	makeData: makeData,
+	user_to_db: user_to_db
 }
 
 exports.Database = Database;

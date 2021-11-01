@@ -5,12 +5,23 @@ const {Database} = require(".././database.js")
 const {Torn_data} = require('.././torn')
 
 
+function template_user() {
+	let user = {
+		"torn_id": "",
+		"torn_name": "",
+		"discord_id": "",
+		"torn_api_key": "",
+		"share_api_key": false
+	}
+	return user
+}
+
 function get_user( user_id=false ) {
 	data = Database.getData()
 	if ( Object.keys( data["players"] ).includes( user_id.toString() )  ) {
 		return data["players"][ user_id.toString() ]
 	}
-	return undefined
+	return template_user()
 }
 
 async function http_request(url) {

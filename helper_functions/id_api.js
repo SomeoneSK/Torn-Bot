@@ -70,67 +70,90 @@ async function get_data_from_api( url, user_id=false, private=false ) {
 };
 
 async function set_users_key(user_id, guild_id, key="") {
-	let filter = {"discord_id": user_id.toString() }
-	let update = {"$set": {"torn_api_key":key } }
-	if ( key === "") {
-		update["$set"]["share_api_key"] = false
-	}
-	let operation1 = {"updateOne": { filter: filter, update: update } }
 
-	data = Database.getData()
-	data["players"][ user_id.toString() ]["torn_api_key"] = key
-	a = await Database.setData( data, {"players": [ operation1 ] } )
-
+	let to_return = {"done":true}
+	let info = {}
 	if (key !== "") {
-		let url = General_functions.make_url( "user", id=id, selections=["profile"] )
-		info = await get_data_from_api( url, user_id, private=false )
+		let url = General_functions.make_url( "user", id="", selections=["profile"] )
+		info = await General_functions.http_request( url + key )
 		if ( info["error"] !== undefined ) {
 			let error = info["error"]["error"] || info["error"]
-			return {"error": "Set your API key but did not rename you - " + error }
-		}
-		let result = await Discord_functions.rename_user( user_id, guild_id, info["name"] + "[ " + info["player_id"] + "]" )
-		if ( result["error"] !== undefined ) {
-			return {"error": "Set your API key, but could not rename you."}
+			to_return = {"error": "Set your API key but did not rename you - " + error }
+		} else {
+			torn_id = info["player_id"]
+			let result = await Discord_functions.rename_user( user_id, guild_id, info["name"] + "[ " + info["player_id"] + "]" )
+			if ( result["error"] !== undefined ) {
+				to_return = {"error": "Set your API key, but could not rename you."}
+			}
 		}
 	}
-	return {"done":true}
+
+	data = Database.getData()
+	let user = General_functions.get_user(user_id)
+
+	user["torn_api_key"] = key
+	if (info["torn_id"] !== undefined) {
+		user["torn_id"] = info["torn_id"]
+		user["torn_name"] = info["name"]
+	}
+	if ( key === "") {
+		user["share_api_key"] = false
+	}
+
+	let filter = {"discord_id": user_id.toString() }
+	let replacement = Database.user_to_db(user)
+	let operation1 = {"replaceOne": { filter: filter, replacement: replacement } }
+
+	data["players"][user_id] = user
+	a = await Database.setData( data, {"players": [ operation1 ] } )
+
+	return to_return
 }
 
 async function set_users_id(user_id, guild_id, id="") {
 	data = Database.getData()
-	if ( data["players"][ user_id.toString() ]["torn_api_key"] !== "" ) {
+	let to_return = {"done":true}
+	let user = General_functions.get_user(user_id)
+
+	if ( user["torn_api_key"] !== "" ) {
 		return {"error": "Can't set your ID when you have set API key!"}
 	}
 
+	let info = {}
 	if (id !== "") {
 		let url = General_functions.make_url( "user", id=id, selections=["profile"] )
 		info = await get_data_from_api( url, user_id, private=false )
 		if ( info["error"] !== undefined ) {
 			let error = info["error"]["error"] || info["error"]
-			return {"error": error + " - can't get your name!" }
+			to_return = {"error": "Set your ID but can't get your name - " + error }
+		}
+	}
+
+	user["torn_id"] = id
+	if (info["torn_id"] !== undefined) {
+		user["torn_id"] = info["torn_id"]
+		user["torn_name"] = info["name"]
+
+		let result = await Discord_functions.rename_user( user_id, guild_id, info["name"] + "[ " + info["player_id"] + "]" )
+		if ( result["error"] !== undefined ) {
+			return {"error": "Set your ID, but could not rename you."}
 		}
 	}
 
 	let filter = {"discord_id": user_id.toString() }
-	let update = {"$set": {"torn_id":id } }
+	let replacement = Database.user_to_db(user)
+	let operation1 = {"replaceOne": { filter: filter, replacement: replacement } }
 
-	let operation1 = {"updateOne": { filter: filter, update: update } }
-
-	data["players"][ user_id.toString() ]["torn_id"] = id
+	data["players"][user_id] = user
 	a = await Database.setData( data, {"players": [ operation1 ] } )
 
-	let result = await Discord_functions.rename_user( user_id, guild_id, info["name"] + "[ " + info["player_id"] + "]" )
-	if ( result["error"] !== undefined ) {
-		return {"error": "Set your ID, but could not rename you."}
-	}
-
-	return {"done":true}
+	return to_return
 
 }
 
 async function share_users_key(user_id, share=false) {
 	data = Database.getData()
-	let this_player = data["players"][user_id.toString()]
+	let this_player = General_functions.get_user(user_id)
 
 	if (this_player["torn_api_key"] === "") {
 		return "You have not set your API key or it was removed!"
