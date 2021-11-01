@@ -71,9 +71,3 @@ const Database = {
 exports.Database = Database;
 
 const db_alert_to_alert = require('./alerts/db_alert_to_alert.js')
-
-/*
-exports.getData = getData;
-exports.setData = setData;
-exports.make_data = make_data;
-*/
