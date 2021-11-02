@@ -20,6 +20,7 @@ module.exports = {
 		
 		let result = await Id_api_functions.set_users_id( interaction_from.id, interaction.guild.id, id )
 
+		console.log(result)
 		if ( result["error"] !== undefined ) {
 			to_send = result["error"]
 		}

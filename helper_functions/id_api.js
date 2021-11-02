@@ -136,7 +136,7 @@ async function set_users_id(user_id, guild_id, id="") {
 
 		let result = await Discord_functions.rename_user( user_id, guild_id, info["name"] + "[ " + info["player_id"] + "]" )
 		if ( result["error"] !== undefined ) {
-			return {"error": "Set your ID, but could not rename you."}
+			to_return = {"error": "Set your ID, but could not rename you."}
 		}
 	}
 
