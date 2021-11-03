@@ -14,7 +14,7 @@ async function company_profile(interaction, id, info = false) {
 		let data = Database.getData()
 		let url = ""
 		if ( id === null ) {
-			if ( !Object.keys(data["players"]).includes(interaction.user.id.toString()) || data["players"][ interaction.user.id.toString() ]["torn_api_key"] === "") {
+			if ( General_functions.get_user(interaction.user.id.toString())["torn_api_key"] === "" ) {
 				return await Message_constructors.error( "Set your api with /setapi or use ID in this command!" )
 			}
 			url = General_functions.make_url( "company", id="", selections=[""] )

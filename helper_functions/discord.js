@@ -11,7 +11,7 @@ async function rename_user(user_id, guild_id, name) {
 		return {"error": "Could not find member"}
 	}
 	try {
-		await member.setNickname(name)
+		let x = await member.setNickname(name)
 		return {"done": true}
 	} catch(error) {
 		return {"error": error}

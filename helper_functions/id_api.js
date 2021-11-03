@@ -81,7 +81,7 @@ async function set_users_key(user_id, guild_id, key="") {
 			to_return = {"error": "Set your API key but did not rename you - " + error }
 		} else {
 			torn_id = info["player_id"]
-			let result = await Discord_functions.rename_user( user_id, guild_id, info["name"] + "[ " + info["player_id"] + "]" )
+			let result = await Discord_functions.rename_user( user_id, guild_id, info["name"] + " [" + info["player_id"] + "]" )
 			if ( result["error"] !== undefined ) {
 				to_return = {"error": "Set your API key, but could not rename you."}
 			}
@@ -124,17 +124,21 @@ async function set_users_id(user_id, guild_id, id="") {
 		let url = General_functions.make_url( "user", id=id, selections=["profile"] )
 		info = await get_data_from_api( url, user_id, private=false )
 		if ( info["error"] !== undefined ) {
-			let error = info["error"]["error"] || info["error"]
-			to_return = {"error": "Set your ID but can't get your name - " + error }
+			let error = info["error"] 
+			if (error["error"] !== undefined) {
+				error = info["error"]["error"]
+			}
+			to_return = {"error": "Set your ID but can't get your name - " + error.toString() }
 		}
 	}
 
 	user["torn_id"] = id
-	if (info["torn_id"] !== undefined) {
-		user["torn_id"] = info["torn_id"]
+	if (info["player_id"] !== undefined) {
+		user["torn_id"] = info["player_id"]
 		user["torn_name"] = info["name"]
 
-		let result = await Discord_functions.rename_user( user_id, guild_id, info["name"] + "[ " + info["player_id"] + "]" )
+		let result = await Discord_functions.rename_user( user_id, guild_id, info["name"] + " [" + info["player_id"] + "]" )
+		console.log(result)
 		if ( result["error"] !== undefined ) {
 			to_return = {"error": "Set your ID, but could not rename you."}
 		}

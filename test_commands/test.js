@@ -1,17 +1,14 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const {Database} = require("../database.js")
+const {Charts_functions} = require("../helper_functions/charts.js")
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('test')
-		.setDescription('test vomm!')
-		.addSubcommand(subcommand =>
-			subcommand
-				.setName('user')
-				.setDescription('Info about a user')
-				.addUserOption(option => option.setName('target').setDescription('The user'))),
+		.setDescription('test!'),
 	async execute(interaction) {
-		await interaction.reply('test!');
+		let img = Charts_functions.line_chart()
+		await interaction.reply( {content:'test!', files: [img] } );
 	},
 }
 

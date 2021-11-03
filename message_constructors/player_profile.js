@@ -11,7 +11,7 @@ async function player_profile(interaction, id, info=false) {
 	if ( info === false ) {
 		let data = Database.getData()
 		if ( id === null ) {
-			if ( !Object.keys(data["players"]).includes(interaction.user.id.toString()) ) {
+			if ( General_functions.get_user(interaction.user.id.toString())["torn_id"] === "" ) {
 				return await Message_constructors.error( "Set your ID with /setid or use ID in this command!" )
 			}
 			id = data["players"][ interaction.user.id.toString() ]["torn_id"]
