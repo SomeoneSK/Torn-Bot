@@ -92,8 +92,8 @@ async function set_users_key(user_id, guild_id, key="") {
 	let user = General_functions.get_user(user_id)
 
 	user["torn_api_key"] = key
-	if (info["torn_id"] !== undefined) {
-		user["torn_id"] = info["torn_id"]
+	if (info["player_id"] !== undefined) {
+		user["torn_id"] = info["player_id"]
 		user["torn_name"] = info["name"]
 	}
 	if ( key === "") {

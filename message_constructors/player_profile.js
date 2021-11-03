@@ -7,14 +7,23 @@ const {Id_api_functions} = require("../helper_functions/id_api.js")
 const {Message_constructors} = require('../message_constructors')
 const {Embed_functions} = require('../helper_functions/embeds.js')
 
-async function player_profile(interaction, id, info=false) {
+async function player_profile(interaction, player, info=false) {
+	console.log(player)
+	let id = 0
 	if ( info === false ) {
 		let data = Database.getData()
-		if ( id === null ) {
+		if ( player === null ) {
 			if ( General_functions.get_user(interaction.user.id.toString())["torn_id"] === "" ) {
 				return await Message_constructors.error( "Set your ID with /setid or use ID in this command!" )
 			}
 			id = data["players"][ interaction.user.id.toString() ]["torn_id"]
+		} else if ( player.startsWith("<@!") ) {
+			console.log(player.substring(3, player.length-1))
+			let user = General_functions.get_user( player.substring(3, player.length-1) )
+			if (user["torn_id"] === "" ) {
+				return await Message_constructors.error( "This player did not set his ID!" )
+			}
+			id = user["torn_id"]
 		}
 		let url = General_functions.make_url( "user", id=id, selections=["profile"] )
 		info = await Id_api_functions.get_data_from_api( url, user_id=interaction.user.id, private=false )

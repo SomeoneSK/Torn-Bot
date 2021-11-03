@@ -24,6 +24,16 @@ function get_user( user_id=false ) {
 	return template_user()
 }
 
+function get_user_by_key(key, value) {
+	data = Database.getData()
+	for (let player of data["players"] ) {
+		if (player[key].toString() === value.toString()) {
+			return player
+		}
+	}
+	return undefined
+}
+
 async function http_request(url) {
 	try {
 		const response = await axios.get(url);
@@ -202,7 +212,8 @@ const General_functions = {
 	delete_from_list_by_key: delete_from_list_by_key,
 	delete_from_list: delete_from_list,
 	get_files_in_folder: get_files_in_folder,
-	am_i_original: am_i_original
+	am_i_original: am_i_original,
+	get_user_by_key: get_user_by_key
 }
 
 exports.General_functions = General_functions;

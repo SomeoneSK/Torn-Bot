@@ -37,7 +37,7 @@ async function makeData(){
 		let alert = await db_alert_to_alert.db_alert_to_alert( i )
 		data["alerts"].push( alert )
 	} )
-
+	console.log(data)
 	client.close();
 }
 
