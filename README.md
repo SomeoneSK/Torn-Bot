@@ -20,8 +20,8 @@ To run this bot, you will need declare these variables in config.json and new .e
 config.json:
 - client_id - bot's ID
 - guild_id - test channel's ID
-- commands_channel - channel ID, where the bot will log commands used
-- errors_channel - channel ID, where the bot will log errors
-- status_channel - channel ID, where the bot will send message every 15 minutes
+- commands_channel (optional) - channel ID, where the bot will log commands used
+- errors_channel (optional) - channel ID, where the bot will log errors
+- status_channel (optional) - channel ID, where the bot will send message every 15 minutes
 
 <br>Creator: [SomeoneSK [2572033]](https://www.torn.com/profiles.php?XID=2572033) - [TTTZ#3597](https://discord.com/users/411588198280593418)
