@@ -29,6 +29,9 @@ client.commands = new Collection();
 
 const commands = [];
 for (const file of Object.keys(Commands)) {
+	if (client.id === "895302817672204368"){
+		command.data.name = 'test_' + command.data.name
+	}
 	client.commands.set(Commands[file].data.name, Commands[file]);
 	commands.push(Commands[file].data.toJSON());
 }

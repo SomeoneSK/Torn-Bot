@@ -8,7 +8,6 @@ const {Message_constructors} = require('../message_constructors')
 const {Embed_functions} = require('../helper_functions/embeds.js')
 
 async function player_profile(interaction, player, info=false) {
-	console.log(player)
 	let id = 0
 	if ( info === false ) {
 		let data = Database.getData()
@@ -18,7 +17,6 @@ async function player_profile(interaction, player, info=false) {
 			}
 			id = data["players"][ interaction.user.id.toString() ]["torn_id"]
 		} else if ( player.startsWith("<@!") ) {
-			console.log(player.substring(3, player.length-1))
 			let user = General_functions.get_user( player.substring(3, player.length-1) )
 			if (user["torn_id"] === "" ) {
 				return await Message_constructors.error( "This player did not set his ID!" )

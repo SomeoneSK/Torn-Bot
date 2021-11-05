@@ -32,6 +32,8 @@ module.exports = {
 		if (chan !== undefined) {
 			setInterval(send_msg, 1000*60*15)
 		}
+
+		client.user.setPresence({ activities: [{ name: 'https://discord.gg/3RmCckhXWg' }], status: 'online' });
 	},
 };
 
