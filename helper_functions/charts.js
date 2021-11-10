@@ -62,6 +62,7 @@ async function timeline_graph(data={}, title = "", x_label = "", y_label = "") {
 	if (y_label === "") {options.scales.yAxes[0].scaleLabel.display = false}
 
 	const qc = new QuickChart();
+
 	qc.setConfig({
 	type: 'line',
 	data: {
@@ -71,8 +72,9 @@ async function timeline_graph(data={}, title = "", x_label = "", y_label = "") {
 	options: options,
 	});
 	qc.setWidth(600).setHeight(400).setBackgroundColor('transparent');
-
+	console.log("a")
 	const image = await qc.toBinary();
+	console.log("a")
 	return image
 }
 

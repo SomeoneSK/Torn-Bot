@@ -37,9 +37,27 @@ async function makeData(){
 		let alert = await db_alert_to_alert.db_alert_to_alert( i )
 		data["alerts"].push( alert )
 	} )
+	
 	//console.log(data)
 	client.close();
 }
+
+/*function nothing_get_stock_history_time_range() {
+	let projection = {
+		"history.current_price": {
+ 			"$filter": {input: "$history.current_price", cond: {"$gt": ["$$this.value", 500] } }
+		},
+		"name": 1,
+	}
+
+	options = {projection: projection }
+	let stocks = client.db("database0").collection("stocks")
+	result = await stocks.find( {}, options )
+	await result.forEach( async function(i) {
+		//console.log(i)
+		console.log(i["history"]["current_price"])
+	} )
+}*/
 
 function getData() {
   return data;
