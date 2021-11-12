@@ -8,7 +8,7 @@ const {Message_constructors} = require('../message_constructors')
 const {Embed_functions} = require('../helper_functions/embeds.js')
 
 async function player_profile(interaction, player, info=false) {
-	let id = 0
+	let id = player
 	if ( info === false ) {
 		let data = Database.getData()
 		if ( player === null ) {
