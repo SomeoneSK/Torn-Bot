@@ -1,0 +1,33 @@
+{
+  "name": "Torn Bot",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "General bot for Torn.com",
+  "main": "index.js",
+  "dependencies": {
+    "@discordjs/builders": "^0.7.0",
+    "@discordjs/rest": "0.1.0-canary.0",
+    "axios": "^0.22.0",
+    "discord-api-types": "^0.25.1",
+    "discord.js": "^13.3.1",
+    "express": "^4.17.1",
+    "luxon": "^2.1.1",
+    "mongodb": "^4.2.0",
+    "node": "^16.10.0",
+    "node-cron": "^3.0.0",
+    "node-fetch": "^3.0.0",
+    "chartjs-node-canvas": "^4.1.5",
+    "chartjs-adapter-luxon": "^1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GPL-3.0",
+  "engines": {
+    "node": "16.x"
+  }
+}
