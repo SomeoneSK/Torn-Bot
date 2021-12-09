@@ -2,7 +2,7 @@ import host from './host.js'
 host()
 import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
-aaa
+
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
 import fs from 'fs';
