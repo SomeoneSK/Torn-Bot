@@ -13,7 +13,7 @@ try {
 	config = require('./config.json')
 } catch(error) {
 	config = {
-		"clientId": "895302817672204368",
+		"clientId": "892034594700951593",
 		"guildId": "892037665719984128",
 		"error_channel": "899743106482704434",
 		"status_channel": "899732115384594442",
