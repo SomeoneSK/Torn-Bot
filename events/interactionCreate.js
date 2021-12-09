@@ -2,7 +2,22 @@ import {General_functions} from "../helper_functions/general.js"
 import { Client, Collection, Intents, MessageActionRow, MessageButton, MessageEmbed, MessageAttachment } from 'discord.js';
 import { createRequire } from 'module'
 const require = createRequire(import.meta.url)
-let config = require('../config.json')
+
+let config = false
+try {
+	config = require('./config.json')
+} catch(error) {
+	config = {
+		"clientId": "895302817672204368",
+		"guildId": "892037665719984128",
+		"error_channel": "899743106482704434",
+		"status_channel": "899732115384594442",
+		"commands_channel": "899734106290671636",
+		"token": process.env.token,
+		"db_string": process.env.db_string
+	}
+}
+
 import util from 'util';
 
 let name = 'interactionCreate'
