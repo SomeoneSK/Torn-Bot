@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders'; //  !!!
 import { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from 'discord.js';
 
-import {Message_constructors} from '../message_constructors/index.js'
+import {Message_constructors} from '../../message_constructors/index.js'
 
 let data = new SlashCommandBuilder()
 		.setName('graph-stock')
