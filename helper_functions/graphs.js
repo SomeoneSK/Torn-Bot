@@ -1,104 +1,33 @@
-import QuickChart from "quickchart-js";
-import fs from "fs";
-import luxon from "luxon";
+import {General_functions} from "./general.js"
+import {Graphs_builders} from './graph_builders.js'
 
-async function timeline_graph(
-  data = {},
-  title = "",
-  x_label = "",
-  y_label = ""
-) {
-  let dataset = {
-    label: "",
-    backgroundColor: "rgba(75, 192, 192, 0.5)",
-    borderColor: "rgb(75, 192, 192)",
-    fill: false,
-    data: []
-  };
-  for (let key of Object.keys(data)) {
-    dataset.data.push({ x: parseInt(key), y: data[key] });
-  }
+async function stock(stock_acronym, property, interval){
+  console.log(stock_acronym, property, interval)
+  let data = await General_functions.http_request( 'https://tornsy.com/api/' +  stock_acronym + '?interval=' + interval)
 
-  let options = {
-    title: {
-      display: true,
-      text: title,
-      fontColor: "rgb(143, 143, 143)",
-      fontSize: 40
-    },
-    legend: {
-      display: false
-    },
-    scales: {
-      xAxes: [
-        {
-          type: "time",
-          scaleLabel: {
-            display: true,
-            labelString: x_label,
-            fontColor: "rgb(143, 143, 143)",
-            fontSize: 30
-          },
-          ticks: {
-            fontColor: "rgb(143, 143, 143)",
-            fontSize: 25
-          },
-          gridLines: {
-            color: "rgb(143, 143, 143)",
-            zeroLineColor: "rgb(143, 143, 143)"
-          }
-        }
-      ],
-      yAxes: [
-        {
-          scaleLabel: {
-            display: true,
-            labelString: y_label,
-            fontColor: "rgb(143, 143, 143)",
-            fontSize: 30
-          },
-          ticks: {
-            fontColor: "rgb(143, 143, 143)",
-            fontSize: 25
-          },
-          gridLines: {
-            color: "rgb(143, 143, 143)",
-            zeroLineColor: "rgb(143, 143, 143)"
-          }
-        }
-      ]
+	let formatted_data = {}
+	let index = 0
+	for (let one of data["data"]) {
+    let values = {}
+		values.current_price = one[1]
+    values.total_shares = one[2]
+    if (interval !== 'm1') {
+      values.total_shares = one[5]
+      values.high = one[2]
+      values.low = one[3]
+      values. close = one[4]
     }
-  };
-
-  if (title === "") {
-    options.title.display = false;
+    values.market_cap = values.current_price * values.total_shares
+		formatted_data[ one[0]*1000 ] = values[property]
+	}
+  const property_capitalized = property.charAt(0).toUpperCase() + property.slice(1);
+  const title = property_capitalized.replace("_", " ") + " of " + stock_acronym.toUpperCase() + " with interval " + interval
+	let graph = await Graphs_builders.timeline_graph(formatted_data, title, "", property.replace("_", " "))
+  return graph
   }
-  if (x_label === "") {
-    options.scales.xAxes[0].scaleLabel.display = false;
-  }
-  if (y_label === "") {
-    options.scales.yAxes[0].scaleLabel.display = false;
-  }
-
-  const qc = new QuickChart();
-  qc.setConfig({
-    type: "line",
-    data: {
-      labels: [],
-      datasets: [dataset]
-    },
-    options: options
-  });
-  qc.setWidth(1500)
-    .setHeight(800)
-    .setBackgroundColor("transparent");
-
-  const image = await qc.toBinary();
-  return image;
-}
 
 const Graphs_functions = {
-  timeline_graph: timeline_graph
+  stock: stock
 };
 
 export { Graphs_functions };
