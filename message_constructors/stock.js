@@ -70,7 +70,6 @@ async function stock(interaction, stock_acronym = null, info=false) {
       new_msg = { embeds: [embed], components: [], attachments: [], files: [attachment] }
       new_msg = await add_the_buttons(new_msg)
 		  await interaction.editReply( new_msg )
-      return "replied"
     }
     
     pages.push( reply )
