@@ -2,7 +2,6 @@ import {General_functions} from "./general.js"
 import {Graphs_builders} from './graph_builders.js'
 
 async function stock(stock_acronym, property, interval){
-  console.log(stock_acronym, property, interval)
   let data = await General_functions.http_request( 'https://tornsy.com/api/' +  stock_acronym + '?interval=' + interval)
 
 	let formatted_data = {}
