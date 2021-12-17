@@ -1,11 +1,12 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } from 'discord.js';
+import { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu, MessageAttachment } from 'discord.js';
 import {General_functions} from "../helper_functions/general.js"
 import {Id_api_functions} from "../helper_functions/id_api.js"
 import {Components_functions} from '../helper_functions/components.js'
 import {error as error_constructor} from './error.js'
 import {Torn_data} from '../torn/index.js'
 import {Embed_functions} from '../helper_functions/embeds.js'
+import {Graphs_functions} from '../helper_functions/graphs.js'
 
 async function stock(interaction, stock_acronym = null, info=false) {
 	if (info === false) {
@@ -48,21 +49,34 @@ async function stock(interaction, stock_acronym = null, info=false) {
 		field2 += "\n**" + stock_info.benefit.description + "**"
 
 		fields.push( { name: "Benefit" , value: field2, inline: true } )
-
-		const embed = new MessageEmbed()
+    
+    const embed = new MessageEmbed()
 		.setColor('#0099ff')
 		.setTitle( stock_info["name"] + " - " + stock_info["acronym"] )
 		.addFields(fields)
 		.setTimestamp()
 		.setFooter( "Page " + index + "/" + Object.keys(info).length )
 
-		pages.push( { embeds: [embed], components: [] } )
+    async function reply(interation, add_the_buttons){
+      const title = "Current price".replace("_", " ") + " of " + stock_info["acronym"] + " with interval m1"
+      let new_msg = { embeds: [embed], components: [], attachments: [], files: [] }
+      new_msg = await add_the_buttons(new_msg)
+		  await interaction.editReply( new_msg )
+      
+      let attachment
+      let graph = await Graphs_functions.stock(stock_info["acronym"], "current_price", "m1")
+      attachment = new MessageAttachment(graph,'graph.png');
+      embed.setImage('attachment://graph.png')
+      new_msg = { embeds: [embed], components: [], attachments: [], files: [attachment] }
+      new_msg = await add_the_buttons(new_msg)
+		  await interaction.editReply( new_msg )
+      return "replied"
+    }
+    
+    pages.push( reply )
 	}
-
+  
 	let to_reply = await Embed_functions.pagination( pages, interaction, stock_index )
-
-
-	//let to_reply = await Embed_functions.check_reply({ embeds: [embed], components: [] }, interaction)
 
 	return to_reply
 }
