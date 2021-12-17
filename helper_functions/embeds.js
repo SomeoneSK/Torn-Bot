@@ -125,19 +125,30 @@ async function limit_embed(returning, interaction, fields_limit, new_lines_limit
 }
 
 async function pagination( the_messages, interaction, default_page = 1 ) {
-
-	if (the_messages.length === 1) { 
-		return the_messages[0]
+  
+  async function reply(message, add_buttons){
+    if (typeof message === 'function') {
+      message = await message(interaction, add_the_buttons)
+      if (message === "replied") {
+        return "ok"
+      }
+    }
+    if (add_buttons) {
+        message = await add_the_buttons(message)
+    }		
+    await interaction.editReply( message )
+  }
+  
+	if (the_messages.length === 1) {
+    return await reply(the_messages[0], false)
 	}
-
 	let current = default_page - 1
 	async function next_page() {
 		if (current !== the_messages.length-1) {
 			current += 1
 		}
 		let new_msg = the_messages[current]
-		new_msg = await add_the_buttons(new_msg)
-		await interaction.editReply( new_msg )
+    await reply(new_msg, true)
 	}
 
 	async function previous_page() {
@@ -145,8 +156,7 @@ async function pagination( the_messages, interaction, default_page = 1 ) {
 			current -= 1
 		}
 		let new_msg = the_messages[current]
-		new_msg = await add_the_buttons(new_msg)
-		await interaction.editReply( new_msg )
+    await reply(new_msg, true)
 	}
 	
 
@@ -179,8 +189,7 @@ async function pagination( the_messages, interaction, default_page = 1 ) {
 	}
 
 	let default_message = the_messages[default_page-1]
-	default_message = add_the_buttons(default_message)
-	return default_message
+  return await reply(default_message, true)
 }
 
 const Embed_functions = {
