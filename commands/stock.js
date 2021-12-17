@@ -13,7 +13,8 @@ let data = new SlashCommandBuilder()
 async function execute(interaction) {
 	let stock = interaction.options.getString('stock');
 
-	return await interaction.reply( await Message_constructors.stock(interaction, stock) )
+  await interaction.deferReply();
+  await Message_constructors.stock(interaction, stock)
 }
 
 export { data }
