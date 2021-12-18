@@ -1,5 +1,3 @@
-console.log("7")
-
 import axios from 'axios';
 import fs from 'fs';
 
