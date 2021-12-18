@@ -99,9 +99,7 @@ async function player_profile(interaction, player, info=false) {
 				.setStyle('LINK')
 		)
 
-	let to_reply = await Embed_functions.check_reply({ embeds: [embed], components: [] }, interaction)
-
-	return to_reply
+	await Embed_functions.check_reply({ embeds: [embed], components: [] }, interaction)
 }
 
 
