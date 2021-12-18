@@ -12,12 +12,13 @@ async function player_profile(interaction, player, info=false) {
 	if ( info === false ) {
 		let data = Database.getData()
 		if ( player === null ) {
-			if ( General_functions.get_user(interaction.user.id.toString())["torn_id"] === "" ) {
+      let get_user_result = await General_functions.get_user(interaction.user.id.toString())
+			if ( get_user_result["torn_id"] === "" ) {
 				return await error_constructor( "Set your ID with /setid or use ID in this command!" )
 			}
 			id = data["players"][ interaction.user.id.toString() ]["torn_id"]
 		} else if ( player.startsWith("<@!") ) {
-			let user = General_functions.get_user( player.substring(3, player.length-1) )
+			let user = await General_functions.get_user( player.substring(3, player.length-1) )
 			if (user["torn_id"] === "" ) {
 				return await error_constructor( "This player did not set his ID!" )
 			}

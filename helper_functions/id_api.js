@@ -12,17 +12,14 @@ async function get_shared_api_key() {
 	if ( data["general"]["shared_apis"]["index"] > data["general"]["shared_apis"]["apis"].length -1 ) {
 		data["general"]["shared_apis"]["index"] = 0
 	}
-	await Database.setData(data, {})
+	await Database.setData(data, false)
 	let discord_id = data["general"]["shared_apis"]["apis"][ data["general"]["shared_apis"]["index"] ]["discord_id"]
 	return data["players"][ discord_id.toString() ]["torn_api_key"]
 }
 
-function get_users_key(user_id=false) {
-	const doc = General_functions.get_user( user_id )
-	if ( doc !== undefined ) {
-		return doc["torn_api_key"]
-	}
-	return ""
+async function get_users_key(user_id) {
+	const doc = await General_functions.get_user( user_id )
+	return doc["torn_api_key"]
 }
 
 async function get_data_from_api_shared(url) {
@@ -58,11 +55,13 @@ async function get_data_from_api_shared(url) {
 }
 
 async function get_data_from_api( url, user_id=false, private_data=false ) {
-	const key = get_users_key( user_id=user_id.toString() )
-	if ( key !== "" ) {
-		const res = await General_functions.http_request(url + key)
-		return res
-	}
+  if (user_id !== false) {
+    const key = await get_users_key( user_id=user_id.toString() )
+    if ( key !== "" ) {
+      const res = await General_functions.http_request(url + key)
+      return res
+    }
+  }
 	if ( private_data === false ) {
 		return await get_data_from_api_shared(url)
 	}
@@ -89,7 +88,7 @@ async function set_users_key(user_id, guild_id, key="") {
 	}
 
 	let data = Database.getData()
-	let user = General_functions.get_user(user_id)
+	let user = await General_functions.get_user(user_id)
 
 	user["torn_api_key"] = key
 	if (info["player_id"] !== undefined) {
@@ -113,7 +112,7 @@ async function set_users_key(user_id, guild_id, key="") {
 async function set_users_id(user_id, guild_id, id="") {
 	let data = Database.getData()
 	let to_return = {"done":true}
-	let user = General_functions.get_user(user_id)
+	let user = await General_functions.get_user(user_id)
 
 	if ( user["torn_api_key"] !== "" ) {
 		return {"error": "Can't set your ID when you have set API key!"}

@@ -17,12 +17,16 @@ function template_user() {
 	return user
 }
 
-function get_user( user_id=false ) {
+async function get_user( user_id ) {
 	let data = Database.getData()
 	if ( Object.keys( data["players"] ).includes( user_id.toString() )  ) {
 		return data["players"][ user_id.toString() ]
 	}
-	return template_user()
+  let template = template_user()
+  template["discord_id"] = user_id.toString()
+  await Database.setData( data, {"players": [ {"insertOne": { document: template } } ] } )
+  data["players"][user_id.toString()] = template
+  return template
 }
 
 function get_user_by_key(key, value) {
