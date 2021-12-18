@@ -72,7 +72,7 @@ async function makeData() {
 	data["alerts_raw"].push(alert);
   });
 
-  console.log(data)
+  //console.log(data)
   client.close();
   return data;
 }

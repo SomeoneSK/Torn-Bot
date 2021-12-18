@@ -28,11 +28,11 @@ async function get_user( user_id ) {
 	if ( Object.keys( data["players"] ).includes( user_id.toString() )  ) {
 		return data["players"][ user_id.toString() ]
 	}
-	let template = template("user")
-	template["discord_id"] = user_id.toString()
-	await Database.setData( data, {"players": [ {"insertOne": { document: template } } ] } )
-	data["players"][user_id.toString()] = template
-	return template
+	let template_user = template("user")
+	template_user["discord_id"] = user_id.toString()
+	await Database.setData( data, {"players": [ {"insertOne": { document: template_user } } ] } )
+	data["players"][user_id.toString()] = template_user
+	return template_user
 }
 
 async function get_server( server_id ) {
@@ -40,11 +40,11 @@ async function get_server( server_id ) {
 	if ( Object.keys( data["server"] ).includes( server_id.toString() )  ) {
 		return data["server"][ server_id.toString() ]
 	}
-  let template = template("server")
-  template["server_id"] = server_id.toString()
-  await Database.setData( data, {"servers": [ {"insertOne": { document: template } } ] } )
-  data["servers"][server_id.toString()] = template
-  return template
+  let template_server = template("server")
+  template_server["server_id"] = server_id.toString()
+  await Database.setData( data, {"servers": [ {"insertOne": { document: template_server } } ] } )
+  data["servers"][server_id.toString()] = template_server
+  return template_server
 }
 
 function get_user_by_key(key, value) {

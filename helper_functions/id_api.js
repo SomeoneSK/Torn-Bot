@@ -147,10 +147,9 @@ async function set_users_id(user_id, guild_id, id="") {
 	let operation1 = {"replaceOne": { filter: filter, replacement: replacement } }
 
 	data["players"][user_id] = user
-	const a = await Database.setData( data, {"players": [ operation1 ] } )
+	const a = await Database.setData( data, {"players": [ operation1 ] })
 
 	return to_return
-
 }
 
 async function share_users_key(user_id, share=false) {
