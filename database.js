@@ -48,28 +48,31 @@ async function makeData() {
 
   const players = client.db("database0").collection("players");
   let result = await players.find({});
-  await result.forEach(function(i) {
-    data["players"][i["discord_id"].toString()] = i;
-    if (i["share_api_key"] === true) {
+  await result.forEach(function(player) {
+	delete player["_id"];
+    data["players"][player["discord_id"].toString()] = player;
+    if (player["share_api_key"] === true) {
       data["general"]["shared_apis"]["apis"].push({
-        discord_id: i["discord_id"]
+        discord_id: player["discord_id"]
       });
     }
   });
 
   const servers = client.db("database0").collection("servers");
   result = await servers.find({});
-  await result.forEach(function(i) {
-    data["servers"][i["server_id"].toString()] = i;
+  await result.forEach(function(server) {
+	delete server["_id"];
+	data["servers"][server["server_id"].toString()] = i;
   });
 
   const alerts = client.db("database0").collection("alerts");
   result = await alerts.find({});
   await result.forEach(async function(alert) {
-    data["alerts_raw"].push(alert);
+	delete alert["_id"];
+	data["alerts_raw"].push(alert);
   });
 
-  //console.log(data)
+  console.log(data)
   client.close();
   return data;
 }
