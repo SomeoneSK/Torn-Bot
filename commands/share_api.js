@@ -9,7 +9,7 @@ let data = new SlashCommandBuilder()
 
 async function execute(interaction) {
 	let interaction_from = interaction.user
-	let done = await Id_api_functions.share_users_key(interaction_from.id, share="!")
+	let done = await Id_api_functions.share_users_key(interaction_from.id, "!")
 	return await interaction.reply( {content: done } )
 }
 
