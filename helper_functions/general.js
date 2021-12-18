@@ -6,15 +6,23 @@ import fs from 'fs';
 import { Torn_data } from '.././torn/index.js'
 import { Database } from ".././database.js"
 
-function template_user() {
-	let user = {
-		"torn_id": "",
-		"torn_name": "",
-		"discord_id": "",
-		"torn_api_key": "",
-		"share_api_key": false
+function template(which) {
+	if (which === "user") {
+		let user = {
+			"torn_id": "",
+			"torn_name": "",
+			"discord_id": "",
+			"torn_api_key": "",
+			"share_api_key": false
+		}
+		return user
+	} else if (which === "server") {
+		let server = {
+			"server_id": "",
+			"tags": {}
+		}
+		return server
 	}
-	return user
 }
 
 async function get_user( user_id ) {
@@ -22,10 +30,22 @@ async function get_user( user_id ) {
 	if ( Object.keys( data["players"] ).includes( user_id.toString() )  ) {
 		return data["players"][ user_id.toString() ]
 	}
-  let template = template_user()
-  template["discord_id"] = user_id.toString()
-  await Database.setData( data, {"players": [ {"insertOne": { document: template } } ] } )
-  data["players"][user_id.toString()] = template
+	let template = template("user")
+	template["discord_id"] = user_id.toString()
+	await Database.setData( data, {"players": [ {"insertOne": { document: template } } ] } )
+	data["players"][user_id.toString()] = template
+	return template
+}
+
+async function get_server( server_id ) {
+	let data = Database.getData()
+	if ( Object.keys( data["server"] ).includes( server_id.toString() )  ) {
+		return data["server"][ server_id.toString() ]
+	}
+  let template = template("server")
+  template["server_id"] = server_id.toString()
+  await Database.setData( data, {"servers": [ {"insertOne": { document: template } } ] } )
+  data["servers"][server_id.toString()] = template
   return template
 }
 

@@ -3,6 +3,7 @@ const require = createRequire(import.meta.url);
 
 var data = {
   players: {},
+  servers: {},
   general: {
     shared_apis: {
       apis: [],
@@ -54,6 +55,12 @@ async function makeData() {
         discord_id: i["discord_id"]
       });
     }
+  });
+
+  const servers = client.db("database0").collection("servers");
+  result = await servers.find({});
+  await result.forEach(function(i) {
+    data["servers"][i["server_id"].toString()] = i;
   });
 
   const alerts = client.db("database0").collection("alerts");
