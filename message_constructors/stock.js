@@ -58,18 +58,18 @@ async function stock(interaction, stock_acronym = null, info=false) {
 		.setFooter( "Page " + index + "/" + Object.keys(info).length )
 
     async function reply(interation, add_the_buttons){
-      const title = "Current price".replace("_", " ") + " of " + stock_info["acronym"] + " with interval m1"
-      let new_msg = { embeds: [embed], components: [], attachments: [], files: [] }
-      new_msg = await add_the_buttons(new_msg)
-		  await interaction.editReply( new_msg )
-      
-      let attachment
-      let graph = await Graphs_functions.stock(stock_info["acronym"], "current_price", "m1")
-      attachment = new MessageAttachment(graph,'graph.png');
-      embed.setImage('attachment://graph.png')
-      new_msg = { embeds: [embed], components: [], attachments: [], files: [attachment] }
-      new_msg = await add_the_buttons(new_msg)
-		  await interaction.editReply( new_msg )
+		const title = "Current price".replace("_", " ") + " of " + stock_info["acronym"] + " with interval m1"
+		let new_msg = { embeds: [embed], components: [], attachments: [], files: [] }
+		new_msg = await add_the_buttons(new_msg)
+			await interaction.editReply( new_msg )
+
+		let attachment
+		let graph = await Graphs_functions.stock(stock_info["acronym"], "current_price", "m1")
+		attachment = new MessageAttachment(graph,'graph.png');
+		embed.setImage('attachment://graph.png')
+		new_msg = { embeds: [embed], components: [], attachments: [], files: [attachment] }
+		new_msg = await add_the_buttons(new_msg)
+		await interaction.editReply( new_msg )
     }
     
     pages.push( reply )

@@ -14,7 +14,7 @@ async function button(interaction, button_id, button_label, button_style="PRIMAR
 		}
     }
 
-	const collector = interaction.channel.createMessageComponentCollector({ filter, time: 15000 });
+	const collector = interaction.channel.createMessageComponentCollector({ filter, time: 60000 });
 
 	collector.on('collect', async i => {
 		await func()

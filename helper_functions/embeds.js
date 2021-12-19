@@ -129,15 +129,16 @@ async function pagination( the_messages, interaction, default_page = 1 ) {
   async function reply(message, add_buttons){
     if (typeof message === 'function') {
       message = await message(interaction, add_the_buttons)
-    }
-    if (add_buttons) {
-        message = await add_the_buttons(message)
-    }
-    if (interaction.replied) {
-      await interaction.editReply( message )
     } else {
-      await interaction.reply( message )
-    }
+		if (add_buttons) {
+			message = await add_the_buttons(message)
+		}
+		if (interaction.replied) {
+		await interaction.editReply( message )
+		} else {
+		await interaction.reply( message )
+		}
+	}
   }
   
 	if (the_messages.length === 1) {
@@ -190,7 +191,7 @@ async function pagination( the_messages, interaction, default_page = 1 ) {
 	}
 
 	let default_message = the_messages[default_page-1]
-  return await reply(default_message, true)
+	return await reply(default_message, true)
 }
 
 const Embed_functions = {
