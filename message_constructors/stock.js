@@ -25,7 +25,7 @@ async function stock(interaction, stock_acronym = null, info=false) {
 	if (stock_acronym === null) {stock_acronym = "TSB"}
 
 	if ( !Object.keys(Torn_data.stocks).includes(stock_acronym.toUpperCase()) ) {
-		await interaction.reply( {content: "Wrong stock acronym - choose from: " + Object.keys(Torn_data.stocks).join(", ") } )
+		await interaction.editReply( {content: "Wrong stock acronym - choose from: " + Object.keys(Torn_data.stocks).join(", ") } )
 		return false
 	}
 
