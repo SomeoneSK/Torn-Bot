@@ -62,7 +62,7 @@ async function makeData() {
   result = await servers.find({});
   await result.forEach(function(server) {
 	delete server["_id"];
-	data["servers"][server["server_id"].toString()] = i;
+	data["servers"][server["server_id"].toString()] = server;
   });
 
   const alerts = client.db("database0").collection("alerts");

@@ -37,8 +37,8 @@ async function get_user( user_id ) {
 
 async function get_server( server_id ) {
 	let data = Database.getData()
-	if ( Object.keys( data["server"] ).includes( server_id.toString() )  ) {
-		return data["server"][ server_id.toString() ]
+	if ( Object.keys( data["servers"] ).includes( server_id.toString() )  ) {
+		return data["servers"][ server_id.toString() ]
 	}
   let template_server = template("server")
   template_server["server_id"] = server_id.toString()
@@ -222,6 +222,7 @@ const General_functions = {
 	mention_user: mention_user,
 	get_channel: get_channel,
 	get_user: get_user,
+	get_server: get_server,
 	http_request: http_request,
 	make_url: make_url,
 	make_link: make_link,

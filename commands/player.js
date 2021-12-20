@@ -14,7 +14,7 @@ let data = new SlashCommandBuilder()
 async function execute(interaction) {
 	let player = interaction.options.getString('player');
 		
-	await Message_constructors.player_profile(interaction, player)
+	return await interaction.reply( await Message_constructors.player_profile(interaction, player) )
 }
 
 export { data }

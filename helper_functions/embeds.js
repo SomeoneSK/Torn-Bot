@@ -129,28 +129,29 @@ async function pagination( the_messages, interaction, default_page = 1 ) {
   async function reply(message, add_buttons){
     if (typeof message === 'function') {
       message = await message(interaction, add_the_buttons)
+	  return "replied"
     } else {
 		if (add_buttons) {
 			message = await add_the_buttons(message)
 		}
-		if (interaction.replied) {
-		await interaction.editReply( message )
-		} else {
-		await interaction.reply( message )
-		}
+		return message
 	}
   }
   
 	if (the_messages.length === 1) {
     return await reply(the_messages[0], false)
 	}
+	
 	let current = default_page - 1
 	async function next_page() {
 		if (current !== the_messages.length-1) {
 			current += 1
 		}
 		let new_msg = the_messages[current]
-    await reply(new_msg, true)
+		let result = await reply(new_msg, true)
+		if (result !== "replied") {
+			await interaction.editReply(result)
+		}
 	}
 
 	async function previous_page() {
@@ -158,7 +159,10 @@ async function pagination( the_messages, interaction, default_page = 1 ) {
 			current -= 1
 		}
 		let new_msg = the_messages[current]
-    await reply(new_msg, true)
+    	let result = await reply(new_msg, true)
+		if (result !== "replied") {
+			await interaction.editReply(result)
+		}
 	}
 	
 
