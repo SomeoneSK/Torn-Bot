@@ -81,18 +81,29 @@ function getData() {
   return data;
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
+
+let connected = false
+
 async function setData(new_data, update) {
   data = new_data;
   if (client === false) {
     return "done";
   }
   if (update !== false) {
+    while (connected === true) { await sleep(100) }
+    connected = true
     await client.connect();
     for (let col_name of Object.keys(update)) {
       const col = client.db("database0").collection(col_name);
       await col.bulkWrite(update[col_name]);
     }
     await client.close();
+    connected = false
   }
   return "done";
 }
