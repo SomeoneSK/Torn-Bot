@@ -11,7 +11,12 @@ async function stock_reach(interaction) {
 	}
 	let higher_or_lower = interaction.options.get("higher-or-lower").value
 	let value = interaction.options.get("value").value
-	let property = interaction.options.get("property").value
+	let property = interaction.options.get("property")
+    if (property) { 
+        property = property.value
+    } else {
+        property = "current_price"
+    }
 	
 	let alerts = await Alerts_factories.stock_reach(stock, higher_or_lower, property, value, {type: "user", id: interaction.user.id}, {type: "user", id: interaction.user.id}, interaction.channelId)
 

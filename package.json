@@ -12,13 +12,14 @@
     "discord.js": "^13.3.1",
     "express": "^4.17.1",
     "mongodb": "^4.2.0",
-    "node": "^16.10.0",
     "node-cron": "^3.0.0",
     "node-fetch": "^3.0.0",
     "quickchart-js": "2.0.3",
     "luxon": "2.2.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "node": "^16.13.1"
+  },
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -28,5 +29,13 @@
   "license": "GPL-3.0",
   "engines": {
     "node": "16.x"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SomeoneSK/Torn-Bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SomeoneSK/Torn-Bot/issues"
+  },
+  "homepage": "https://github.com/SomeoneSK/Torn-Bot#readme"
 }

@@ -26,7 +26,10 @@ data.addSubcommandGroup((group) =>
 						])
 						.setRequired(true),
 				)
-				.addStringOption((option) =>
+				.addNumberOption((option) => option.setName('value')	.setDescription('The value to reach')
+					.setRequired(true)
+				)
+                .addStringOption((option) =>
 					option
 						.setName('property')
 						.setDescription('Alert you when what property will reach some value?')
@@ -35,10 +38,7 @@ data.addSubcommandGroup((group) =>
 							['Market Cap', 'market_cap'],
 							['Total Shares', 'total_shares']
 						])
-						.setRequired(true),
-				)
-				.addNumberOption((option) => option.setName('value')	.setDescription('The value to reach')
-					.setRequired(true)
+						.setRequired(false),
 				)
 			),
 );
