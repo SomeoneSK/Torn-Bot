@@ -10,7 +10,8 @@ This bot is **open-source**. Feel free to edit the code as you want. Pull reques
 
 If you have any **suggestions**, **bug reports** or **improvement ideas**, let us know in our discord, create an issue on Github or message us on Torn.
 
-<br>**Run this bot**  
+<br>**Run this bot** 
+For easy setup fork this [replit](https://replit.com/@someonesk/Torn-Bot-fork#events/ready.js)
 To run this bot, you will need declare these variables in config.json file:
 
 - token - discord bot token (google how to get it) 
@@ -20,5 +21,8 @@ To run this bot, you will need declare these variables in config.json file:
 - commands_channel (optional) - channel ID, where the bot will log commands used
 - errors_channel (optional) - channel ID, where the bot will log errors
 - status_channel (optional) - channel ID, where the bot will send message every 15 minutes
+
+You will also need emojis with these names in your server: ["offline", "online", "idle", "in_hospital", "traveling", "in_jail"]
+
 
 <br>Creator: [SomeoneSK [2572033]](https://www.torn.com/profiles.php?XID=2572033) - [TTTZ#3597](https://discord.com/users/411588198280593418)
