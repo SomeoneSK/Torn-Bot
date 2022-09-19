@@ -38,12 +38,12 @@ async function execute(client) {
 	General_functions.makeClient(client)
 	
 	if (data !== undefined) {
-    	await data["alerts_raw"].forEach( async function(i) {
-    		let alert = await db_alert_to_alert( i )
-    		data["alerts"].push( alert )
-    	} )
+		await data["alerts_raw"].forEach( async function(i) {
+			let alert = await db_alert_to_alert( i )
+			data["alerts"].push( alert )
+    		} )
+	}
     	await Alerts_checks.start_checks()
-    }
 
 	let chan = await General_functions.get_channel(config.status_channel)
 	async function send_msg() {
