@@ -8,7 +8,7 @@ const require = createRequire(import.meta.url)
 
 let config = false
 try {
-	config = require('./config.json')
+	config = require('../config.json')
 } catch(error) {
 	config = {
 		"clientId": "895302817672204368",
@@ -27,7 +27,7 @@ async function execute(client) {
 	console.log(`Ready! Logged in as ${client.user.tag}`);
 	let data = await Database.makeData()
 
-	let guild = client.guilds.cache.get('892037665719984128')
+	let guild = client.guilds.cache.get(config.guildId)
 	let names = ["offline", "online", "idle", "in_hospital", "traveling", "in_jail"]
 	let emojis = {}
 	for (let i of names) {
