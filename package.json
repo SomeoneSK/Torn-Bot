@@ -15,7 +15,7 @@
     "node-cron": "^3.0.0",
     "node-fetch": "^3.2.10",
     "quickchart-js": "2.0.3",
-    "luxon": "2.2.0"
+    "luxon": "2.5.2"
   },
   "devDependencies": {
     "node": "^16.13.1"
