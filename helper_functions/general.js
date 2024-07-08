@@ -107,7 +107,7 @@ function make_link(which, id="", format=false) {
 	} else if (which === "display_case") {
 		link = "https://www.torn.com/displaycase.php#display/" + id
 	} else if (which === "item_market") {
-		link = "https://www.torn.com/imarket.php#/p=shop&step=shop&type=&searchname=" + id.replace(" ", "+")
+		link = "https://www.torn.com/imarket.php#/p=shop&step=shop&type=&searchname=" + id.replaceAll(" ", "+")
 	}
 
 	if (format !== false) {

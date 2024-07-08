@@ -8,7 +8,7 @@ const require = createRequire(import.meta.url)
 
 let config = false
 try {
-	config = require('./config.json')
+	config = require('../config.json')
 } catch(error) {
 	config = {
 		"clientId": "895302817672204368",
@@ -27,7 +27,7 @@ async function execute(client) {
 	console.log(`Ready! Logged in as ${client.user.tag}`);
 	let data = await Database.makeData()
 
-	let guild = client.guilds.cache.get('892037665719984128')
+	let guild = client.guilds.cache.get(config.guildId)
 	let names = ["offline", "online", "idle", "in_hospital", "traveling", "in_jail"]
 	let emojis = {}
 	for (let i of names) {
@@ -37,11 +37,13 @@ async function execute(client) {
 
 	General_functions.makeClient(client)
 	
-	await data["alerts_raw"].forEach( async function(i) {
-		let alert = await db_alert_to_alert( i )
-		data["alerts"].push( alert )
-	} )
-	await Alerts_checks.start_checks()
+	if (data !== undefined) {
+		await data["alerts_raw"].forEach( async function(i) {
+			let alert = await db_alert_to_alert( i )
+			data["alerts"].push( alert )
+    		} )
+	}
+    	await Alerts_checks.start_checks()
 
 	let chan = await General_functions.get_channel(config.status_channel)
 	async function send_msg() {

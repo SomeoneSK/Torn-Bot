@@ -65,6 +65,9 @@ async function stock(interaction, stock_acronym = null, info=false) {
 
 		let attachment
 		let graph = await Graphs_functions.stock(stock_info["acronym"], "current_price", "m1")
+		if (graph === null) {
+			return false
+		}
 		attachment = new MessageAttachment(graph,'graph.png');
 		embed.setImage('attachment://graph.png')
 		new_msg = { embeds: [embed], components: [], attachments: [], files: [attachment] }

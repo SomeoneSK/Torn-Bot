@@ -18,7 +18,11 @@ async function stocks() {
 	console.log("Checking " + data["alerts"].length + " stock alerts.")
 	for (let alert of data["alerts"]) {
 		if (alert.alert.type === "stocks.reach") {
-			await alert.check(info)
+			try {
+				await alert.check(info)
+			} catch (e) {
+				console.log("Error checking stock alert: " + e)
+			}
 		}
 	}
 	

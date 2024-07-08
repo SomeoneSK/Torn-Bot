@@ -14,7 +14,11 @@ async function execute(interaction) {
 	let stock = interaction.options.getString('stock');
 
   await interaction.deferReply();
-  await Message_constructors.stock(interaction, stock)
+  try {
+	  await Message_constructors.stock(interaction, stock)
+  } catch (e) {
+	console.log("error command")
+  }
 }
 
 export { data }
